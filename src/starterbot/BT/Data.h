@@ -1,7 +1,6 @@
 #pragma once
 #include <unordered_set>
 #include <BWAPI.h>
-#define WANTED_WORKERS_TOTAL 30
 
 class Data {
 public:
@@ -12,13 +11,18 @@ public:
 	int totalSupply;
 	int thresholdSupply;
 
-	int wantedWorkersTotal;
+	int wantedWorkersTotal = 30;
 
-	bool buildProbes;
-	bool buildArmy;
-	bool autoBuildPylon;
-	bool autoBuildGate;
+	bool buildProbes = true;
+	bool buildArmy = false;
+	bool autoBuildPylon = false;
+	bool autoBuildGate = false;
 
-	bool pylonIsUnderBuild;
-	bool gateIsUnderBuild;
+	bool pylonIsUnderBuild = false;
+	bool gateIsUnderBuild = false;
+
+	int buildOrderStep = 0;
+	static const int buildOrderMaxLength = 20;
+	static std::pair<int, BWAPI::UnitType> buildOrder[buildOrderMaxLength];
+	static std::function<void()> buildOrderExtension[buildOrderMaxLength];
 };

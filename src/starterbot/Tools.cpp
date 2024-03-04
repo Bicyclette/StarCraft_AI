@@ -308,3 +308,23 @@ bool Tools::IsBuildingAvailable(BWAPI::UnitType type) {
     }
     return false;
 }
+
+void Tools::SendProbesToGas(int amount) {
+    int leftToSend = amount;
+    const BWAPI::Unit myAssimilator = Tools::GetUnitOfType(BWAPI::UnitTypes::Enum::Protoss_Assimilator);
+
+    if (myAssimilator)
+    {
+        const BWAPI::Unitset& myUnits = BWAPI::Broodwar->self()->getUnits();
+        for (auto& unit : myUnits)
+        {
+            if (unit->getType().isWorker() && (unit->isIdle() || unit->isGatheringMinerals()))
+            {
+                unit->rightClick(myAssimilator);
+                amount--;
+            }
+
+            if (amount <= 0) return;
+        }
+    }
+}

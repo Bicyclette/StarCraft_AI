@@ -14,7 +14,7 @@ BT_NODE::State BT_ACTION_TRAIN_UNIT::Evaluate(void* data)
 
 std::string BT_ACTION_TRAIN_UNIT::GetDescription()
 {
-    return "TRAIN WORKER";
+    return "TRAIN UNIT";
 }
 
 

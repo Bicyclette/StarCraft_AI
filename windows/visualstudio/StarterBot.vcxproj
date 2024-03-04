@@ -43,9 +43,11 @@
     <ClInclude Include="..\..\src\starterbot\BT\BT_PARALLEL_SEQUENCER.h" />
     <ClInclude Include="..\..\src\starterbot\BT\BT_SELECTOR.h" />
     <ClInclude Include="..\..\src\starterbot\BT\BT_SEQUENCER.h" />
+    <ClInclude Include="..\..\src\starterbot\BT\BT_STARCRAFT\BT_ACTION_BO.h" />
     <ClInclude Include="..\..\src\starterbot\BT\BT_STARCRAFT\BT_ACTION_BUILD_BUILDING.h" />
     <ClInclude Include="..\..\src\starterbot\BT\BT_STARCRAFT\BT_ACTION_SEND_IDLE_WORKER_TO_MINERALS.h" />
     <ClInclude Include="..\..\src\starterbot\BT\BT_STARCRAFT\BT_ACTION_TRAIN_UNIT.h" />
+    <ClInclude Include="..\..\src\starterbot\BT\BT_STARCRAFT\BT_DECO_CONDITION_BO.h" />
     <ClInclude Include="..\..\src\starterbot\BT\BT_STARCRAFT\BT_DECO_CONDITION_BUILD_PYLON.h" />
     <ClInclude Include="..\..\src\starterbot\BT\BT_STARCRAFT\BT_DECO_CONDITION_BUILD_PROBE.h" />
     <ClInclude Include="..\..\src\starterbot\BT\Data.h" />
@@ -79,11 +81,14 @@
     <ClCompile Include="..\..\src\starterbot\BT\BT_PARALLEL_SEQUENCER.cpp" />
     <ClCompile Include="..\..\src\starterbot\BT\BT_SELECTOR.cpp" />
     <ClCompile Include="..\..\src\starterbot\BT\BT_SEQUENCER.cpp" />
+    <ClCompile Include="..\..\src\starterbot\BT\BT_STARCRAFT\BT_ACTION_BO.cpp" />
     <ClCompile Include="..\..\src\starterbot\BT\BT_STARCRAFT\BT_ACTION_BUILD_BUILDING.cpp" />
     <ClCompile Include="..\..\src\starterbot\BT\BT_STARCRAFT\BT_ACTION_SEND_IDLE_WORKER_TO_MINERALS.cpp" />
     <ClCompile Include="..\..\src\starterbot\BT\BT_STARCRAFT\BT_ACTION_TRAIN_UNIT.cpp" />
+    <ClCompile Include="..\..\src\starterbot\BT\BT_STARCRAFT\BT_DECO_CONDITION_BO.cpp" />
     <ClCompile Include="..\..\src\starterbot\BT\BT_STARCRAFT\BT_DECO_CONDITION_BUILD_PYLON.cpp" />
     <ClCompile Include="..\..\src\starterbot\BT\BT_STARCRAFT\BT_DECO_CONDITION_BUILD_PROBE.cpp" />
+    <ClCompile Include="..\..\src\starterbot\BT\Data.cpp" />
     <ClCompile Include="..\..\src\starterbot\main.cpp" />
     <ClCompile Include="..\..\src\starterbot\MapTools.cpp" />
     <ClCompile Include="..\..\src\starterbot\ReplayParser.cpp" />

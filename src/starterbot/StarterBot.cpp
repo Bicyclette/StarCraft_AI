@@ -9,23 +9,28 @@
 StarterBot::StarterBot()
 {
     pData = new Data();
+    StarterBot::setupData();
     pData->currMinerals = 0;
     pData->currSupply = 0;
     pData->currProbes = 0;
     pData->thresholdSupply = 2;
 
-    pData->buildProbes = true;
-    pData->buildArmy = false;
-    pData->autoBuildPylon = true;
-    pData->autoBuildGate = false;
+    //Define build order
+    pData->buildOrder[0] = std::make_pair(8, BWAPI::UnitTypes::Enum::Protoss_Pylon);
+    pData->buildOrderExtension[0] = []() {std::cout << "BO-0\n";};
+    pData->buildOrder[1] = std::make_pair(11, BWAPI::UnitTypes::Enum::Protoss_Gateway);
+    pData->buildOrderExtension[1] = []() {std::cout << "BO-1\n";};
+    pData->buildOrder[2] = std::make_pair(12, BWAPI::UnitTypes::Enum::Protoss_Assimilator);
+    pData->buildOrderExtension[2] = []() {std::cout << "BO-2\n";};
+    pData->buildOrder[3] = std::make_pair(13, NULL);
+    pData->buildOrderExtension[3] = []() {std::cout << "BO-3\n";};
+    pData->buildOrder[4] = std::make_pair(14, BWAPI::UnitTypes::Enum::Protoss_Cybernetics_Core);
+    pData->buildOrderExtension[4] = []() {std::cout << "BO-4\n"; Tools::SendProbesToGas(2);};
+    pData->buildOrder[5] = std::make_pair(15, BWAPI::UnitTypes::Enum::Protoss_Pylon);
+    pData->buildOrderExtension[5] = []() {std::cout << "BO-5\n";Tools::SendProbesToGas(1);};
+    pData->buildOrder[6] = std::make_pair(201, NULL);   //201 acts as an unreachable condition, marks the end of BO
 
-    pData->pylonIsUnderBuild = false;
-    pData->gateIsUnderBuild = false;
 
-
-    pData->wantedWorkersTotal = WANTED_WORKERS_TOTAL;
-
-   
     //Construction of Macro Tree
     pMacroTree = new BT_DECORATOR("EntryPoint", nullptr);
     BT_DECO_REPEATER* pMTForeverRepeater = new BT_DECO_REPEATER("MTRepeatForever", pMacroTree, 0, true, false, true);
@@ -45,6 +50,10 @@ StarterBot::StarterBot()
 
     BT_DECO_CONDITION_BUILD_PYLON* pBuildPylonCondition = new BT_DECO_CONDITION_BUILD_PYLON("BuildPylonCondition", pBuildBuildingsSelector);
     BT_ACTION_BUILD_BUILDING* pBuildPylonAction = new BT_ACTION_BUILD_BUILDING("BuildPylonAction", pBuildPylonCondition, BWAPI::UnitTypes::Enum::Protoss_Pylon);
+
+    //Progress build order
+    BT_DECO_CONDITION_BO* pBOCondition = new BT_DECO_CONDITION_BO("BOCondition", pMTRootSelector);
+    BT_ACTION_BO* pBOAction = new BT_ACTION_BO("BOAction", pBOCondition);
     
 }
 
@@ -76,6 +85,7 @@ void StarterBot::onFrame()
     Tools::UpdateDataValues(pData);
     Tools::UpdateBuildingStatus(pData);
 
+    //std::cout << pData->currMinerals<<"\n";
     
     // Run MacroTree
     if (pMacroTree != nullptr && pMacroTree->Evaluate(pData) != BT_NODE::RUNNING)
@@ -160,4 +170,10 @@ void StarterBot::onUnitHide(BWAPI::Unit unit)
 void StarterBot::onUnitRenegade(BWAPI::Unit unit)
 { 
 	
+}
+
+void StarterBot::setupData() {
+    for (int i = 0; i < Data::buildOrderMaxLength; ++i) {
+        Data::buildOrderExtension[i] = []() {};
+    }
 }

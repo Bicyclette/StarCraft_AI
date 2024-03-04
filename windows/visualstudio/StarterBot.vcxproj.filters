@@ -90,6 +90,15 @@
     <ClCompile Include="..\..\src\starterbot\BT\BT_STARCRAFT\BT_DECO_CONDITION_BUILD_PYLON.cpp">
       <Filter>BT\BT_STARCRAFT</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\starterbot\BT\Data.cpp">
+      <Filter>BT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\starterbot\BT\BT_STARCRAFT\BT_ACTION_BO.cpp">
+      <Filter>BT\BT_STARCRAFT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\starterbot\BT\BT_STARCRAFT\BT_DECO_CONDITION_BO.cpp">
+      <Filter>BT\BT_STARCRAFT</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\starterbot\Grid.hpp" />
@@ -185,6 +194,12 @@
       <Filter>BT\BT_STARCRAFT</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\starterbot\BT\BT_STARCRAFT\BT_DECO_CONDITION_BUILD_PYLON.h">
+      <Filter>BT\BT_STARCRAFT</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\starterbot\BT\BT_STARCRAFT\BT_ACTION_BO.h">
+      <Filter>BT\BT_STARCRAFT</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\starterbot\BT\BT_STARCRAFT\BT_DECO_CONDITION_BO.h">
       <Filter>BT\BT_STARCRAFT</Filter>
     </ClInclude>
   </ItemGroup>
