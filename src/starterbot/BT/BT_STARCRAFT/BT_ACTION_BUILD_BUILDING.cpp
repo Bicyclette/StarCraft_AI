@@ -23,7 +23,7 @@ BT_NODE::State BT_ACTION_BUILD_BUILDING::BuildBuilding(void* data)
     Data* pData = (Data*)data;
 
 
-    const bool startedBuilding = Tools::BuildBuilding(typeToBuild);
+    const bool startedBuilding = Tools::MyBuildBuilding(typeToBuild);
 
     if (startedBuilding)
     {

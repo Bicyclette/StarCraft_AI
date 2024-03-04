@@ -79,6 +79,28 @@ bool Tools::BuildBuilding(BWAPI::UnitType type)
     return builder->build(type, buildPos);
 }
 
+bool Tools::MyBuildBuilding(BWAPI::UnitType type) {
+    // Find a worker that isn't on more important task
+    BWAPI::Unit myWorker = NULL;
+
+    for (auto& unit : BWAPI::Broodwar->self()->getUnits()) {
+        if (unit->getType() == BWAPI::UnitTypes::Enum::Protoss_Probe && !unit->isGatheringGas() && unit->isCompleted()) {
+            myWorker = unit;
+            break;
+        }
+    }
+
+    // Get a location that we want to build the building next to
+    BWAPI::TilePosition desiredPos = BWAPI::Broodwar->self()->getStartLocation();
+
+    // Ask BWAPI for a building location near the desired position for the type
+    int maxBuildRange = 64;
+
+    BWAPI::TilePosition buildPos = BWAPI::Broodwar->getBuildLocation(type, desiredPos, maxBuildRange, false);
+    return myWorker->build(type, buildPos);
+
+}
+
 void Tools::DrawUnitCommands()
 {
     for (auto& unit : BWAPI::Broodwar->self()->getUnits())
