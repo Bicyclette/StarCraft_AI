@@ -1,4 +1,5 @@
 #include "Tools.h"
+#include <format>
 
 BWAPI::Unit Tools::GetClosestUnitTo(BWAPI::Position p, const BWAPI::Unitset& units)
 {
@@ -254,4 +255,34 @@ void Tools::UpdateBuildingStatus(Data* pData) {
             pData->gateIsUnderBuild = true;
         }
     }
+}
+
+void Tools::UpdateDataValues(Data* pData) {
+    pData->currMinerals = BWAPI::Broodwar->self()->minerals();
+    pData->currGas = BWAPI::Broodwar->self()->gas();
+    pData->currSupply = BWAPI::Broodwar->self()->supplyUsed();
+    pData->totalSupply = BWAPI::Broodwar->self()->supplyTotal();
+
+    int probes = 0;
+    const BWAPI::Unitset& myUnits = BWAPI::Broodwar->self()->getUnits();
+    for (auto& unit : myUnits)
+    {
+        if (unit->getType().isWorker())
+        {
+            probes++;
+        }
+    }
+
+    pData->currProbes = probes;
+}
+
+bool Tools::IsBuildingAvailable(BWAPI::UnitType type) {
+    for (auto& unit : BWAPI::Broodwar->self()->getUnits())
+    {
+        if (unit->getType() == type && unit->isCompleted() && !unit->isTraining())
+        {
+            return true;
+        }
+    }
+    return false;
 }

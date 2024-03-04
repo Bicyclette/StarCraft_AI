@@ -32,7 +32,6 @@ BT_NODE::State BT_ACTION_SEND_IDLE_WORKER_TO_MINERALS::SendIdleWorkerToMinerals(
             // If a valid mineral was found, right click it with the unit in order to start harvesting
             if (closestMineral) {
                 unit->rightClick(closestMineral);
-                pData->unitsFarmingMinerals.insert(unit);
                 return BT_NODE::SUCCESS;
             }
         }

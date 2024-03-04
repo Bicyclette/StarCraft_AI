@@ -5,13 +5,15 @@
 #include <BWAPI.h>
 
 //--------------------
-class BT_ACTION_BUILD_SUPPLY_PROVIDER: public BT_ACTION {
+class BT_ACTION_TRAIN_UNIT : public BT_ACTION {
 public:
-    BT_ACTION_BUILD_SUPPLY_PROVIDER(std::string name, BT_NODE* parent);
+    BT_ACTION_TRAIN_UNIT(std::string name, BT_NODE* parent, BWAPI::UnitType type);
 
 private:
     State Evaluate(void* data) override;
     std::string GetDescription() override;
-    static BT_NODE::State BuildSupplyProvider(void* data);
+    BT_NODE::State TrainUnit(void* data);
+
+    BWAPI::UnitType typeToBuild;
 };
 //----------

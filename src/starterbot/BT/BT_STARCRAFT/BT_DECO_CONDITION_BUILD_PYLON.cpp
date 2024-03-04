@@ -16,9 +16,14 @@ bool BT_DECO_CONDITION_BUILD_PYLON::doBuildPylon(void* data)
 {
     Data* pData = (Data*)data;
 
-    // Get the amount of supply supply we currently have unused
-    const int unusedSupply = Tools::GetTotalSupply(true) - BWAPI::Broodwar->self()->supplyUsed();
+    Tools::UpdateDataValues(pData);
 
-    return pData->autoBuildPylon && !pData->pylonIsUnderBuild && unusedSupply <= pData->thresholdSupply && pData->currMinerals >= 100 && pData->totalSupply < 200;
+    // Get the amount of supply supply we currently have unused
+    const int unusedSupply = pData->totalSupply - pData->currSupply;
+
+    const bool canBuild = pData->currMinerals >= 100;
+    const bool wantToBuild = pData->autoBuildPylon && !pData->pylonIsUnderBuild && unusedSupply <= pData->thresholdSupply && pData->totalSupply < 200;
+
+    return canBuild && wantToBuild;
 
 }

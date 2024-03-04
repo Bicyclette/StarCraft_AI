@@ -16,9 +16,14 @@ bool BT_DECO_CONDITION_BUILD_PROBE::doBuildProbe(void* data)
 {
     Data* pData = (Data*)data;
 
+    Tools::UpdateDataValues(pData);
+
     // Get the amount of supply supply we currently have unused
-    const int unusedSupply = Tools::GetTotalSupply(true) - BWAPI::Broodwar->self()->supplyUsed();
+    const int unusedSupply = pData->totalSupply - pData->currSupply;
+
+    const bool canBuild = Tools::IsBuildingAvailable(BWAPI::UnitTypes::Enum::Protoss_Nexus) && unusedSupply >=2 && pData->currMinerals >= 50;
+    const bool wantToBuild = pData->buildProbes && pData->currProbes < pData->wantedWorkersTotal;
     
-    return pData->buildProbes && unusedSupply > 0 && pData->currMinerals >= 50 && pData->currProbes < NWANTED_WORKERS_TOTAL;
+    return  canBuild && wantToBuild;
 
 }

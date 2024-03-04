@@ -27,4 +27,6 @@ namespace Tools
     void DrawHealthBar(BWAPI::Unit unit, double ratio, BWAPI::Color color, int yOffset);
 
     void UpdateBuildingStatus(Data* pData);
+    void UpdateDataValues(Data* pData);
+    bool IsBuildingAvailable(BWAPI::UnitType type);
 }
