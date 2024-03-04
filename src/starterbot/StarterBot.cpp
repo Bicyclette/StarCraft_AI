@@ -14,8 +14,29 @@ StarterBot::StarterBot()
     pData->currSupply = 0;
     pData->thresholdSupply = THRESHOLD1_UNUSED_SUPPLY;
 
+    pData->buildProbes = true;
+    pData->buildArmy = false;
+    pData->autoBuildPylon = true;
+    pData->autoBuildGate = false;
+
+    pData->pylonIsUnderBuild = false;
+    pData->gateIsUnderBuild = false;
+
+
     pData->nWantedWorkersTotal = NWANTED_WORKERS_TOTAL;
     pData->nWantedWorkersFarmingMinerals = NWANTED_WORKERS_FARMING_MINERALS;
+
+    int probes = 0;
+    const BWAPI::Unitset& myUnits = BWAPI::Broodwar->self()->getUnits();
+    for (auto& unit : myUnits)
+    {
+        if (unit->getType().isWorker())
+        {
+            probes++;
+        }
+    }
+
+    pData->currProbes = probes;
 
     pBtTest = nullptr;
     /*
@@ -45,9 +66,9 @@ StarterBot::StarterBot()
     BT_PARALLEL_SEQUENCER* pParallelSeq = new BT_PARALLEL_SEQUENCER("MainParallelSequence", pBT, 10);
 
     //Farming Minerals forever
-    BT_DECO_REPEATER* pFarmingMineralsForeverRepeater = new BT_DECO_REPEATER("RepeatForeverFarmingMinerals", pParallelSeq, 0, true, false,false);
-    BT_DECO_CONDITION_NOT_ENOUGH_WORKERS_FARMING_MINERALS* pNotEnoughWorkersFarmingMinerals = new BT_DECO_CONDITION_NOT_ENOUGH_WORKERS_FARMING_MINERALS("NotEnoughWorkersFarmingMinerals", pFarmingMineralsForeverRepeater);
-    BT_ACTION_SEND_IDLE_WORKER_TO_MINERALS* pSendWorkerToMinerals = new BT_ACTION_SEND_IDLE_WORKER_TO_MINERALS("SendWorkerToMinerals", pNotEnoughWorkersFarmingMinerals);
+    //BT_DECO_REPEATER* pFarmingMineralsForeverRepeater = new BT_DECO_REPEATER("RepeatForeverFarmingMinerals", pParallelSeq, 0, true, false,false);
+    //BT_DECO_CONDITION_NOT_ENOUGH_WORKERS_FARMING_MINERALS* pNotEnoughWorkersFarmingMinerals = new BT_DECO_CONDITION_NOT_ENOUGH_WORKERS_FARMING_MINERALS("NotEnoughWorkersFarmingMinerals", pFarmingMineralsForeverRepeater);
+    //BT_ACTION_SEND_IDLE_WORKER_TO_MINERALS* pSendWorkerToMinerals = new BT_ACTION_SEND_IDLE_WORKER_TO_MINERALS("SendWorkerToMinerals", pNotEnoughWorkersFarmingMinerals);
 
     //Training Workers
     BT_DECO_REPEATER* pTrainingWorkersForeverRepeater = new BT_DECO_REPEATER("RepeatForeverTrainingWorkers", pParallelSeq, 0, true, false,false);
@@ -58,6 +79,29 @@ StarterBot::StarterBot()
     BT_DECO_REPEATER* pBuildSupplyProviderForeverRepeater = new BT_DECO_REPEATER("RepeatForeverBuildSupplyProvider", pParallelSeq, 0, true, false,false);
     BT_DECO_CONDITION_NOT_ENOUGH_SUPPLY* pNotEnoughSupply = new BT_DECO_CONDITION_NOT_ENOUGH_SUPPLY("NotEnoughSupply", pBuildSupplyProviderForeverRepeater);
     BT_ACTION_BUILD_SUPPLY_PROVIDER* pBuildSupplyProvider = new BT_ACTION_BUILD_SUPPLY_PROVIDER("BuildSupplyProvider", pNotEnoughSupply);
+
+
+
+    //Construction of Macro Tree
+    pMacroTree = new BT_DECORATOR("EntryPoint", nullptr);
+    BT_DECO_REPEATER* pMTForeverRepeater = new BT_DECO_REPEATER("MTRepeatForever", pMacroTree, 0, true, false, true);
+    BT_SELECTOR* pMTRootSelector = new BT_SELECTOR("MTRootSelector", pMTForeverRepeater, 5);
+
+    //Send idle workers to work
+    BT_ACTION_SEND_IDLE_WORKER_TO_MINERALS* pSendWorkerToMinerals = new BT_ACTION_SEND_IDLE_WORKER_TO_MINERALS("SendWorkerToMinerals", pMTRootSelector);
+
+    //Build units according to general goal
+    BT_SELECTOR* pBuildUnitsSelector = new BT_SELECTOR("BuildUnitsSelector", pMTRootSelector, 10);
+
+    BT_DECO_CONDITION_BUILD_PROBE* pBuildProbeCondition = new BT_DECO_CONDITION_BUILD_PROBE("BuildProbeCondition", pBuildUnitsSelector);
+    BT_ACTION_TRAIN_WORKER* pBuildProbeAction = new BT_ACTION_TRAIN_WORKER("BuildProbeAction", pBuildProbeCondition);
+
+    //Build buildings according to general goal
+    BT_SELECTOR* pBuildBuildingsSelector = new BT_SELECTOR("BuildBuildingsSelector", pMTRootSelector, 10);
+
+    BT_DECO_CONDITION_BUILD_PYLON* pBuildPylonCondition = new BT_DECO_CONDITION_BUILD_PYLON("BuildPylonCondition", pBuildBuildingsSelector);
+    BT_ACTION_BUILD_SUPPLY_PROVIDER* pBuildPylonAction = new BT_ACTION_BUILD_SUPPLY_PROVIDER("BuildPylonAction", pBuildPylonCondition);
+    
 }
 
 // Called when the bot starts!
@@ -86,20 +130,31 @@ void StarterBot::onFrame()
 
     pData->currMinerals = BWAPI::Broodwar->self()->minerals();
     pData->currSupply = Tools::GetUnusedSupply(true);
+    pData->totalSupply = Tools::GetTotalSupply(true);
+
+    Tools::UpdateBuildingStatus(pData);
     
     // AI BT
-    if (pBT != nullptr && pBT->Evaluate(pData) != BT_NODE::RUNNING)
+    //if (pBT != nullptr && pBT->Evaluate(pData) != BT_NODE::RUNNING)
     {
         delete (BT_DECORATOR*)pBT;
         pBT = nullptr;
     }
 
     //Test BT
-    if (pBtTest != nullptr && pBtTest->Evaluate(pData) != BT_NODE::RUNNING)
+    //if (pBtTest != nullptr && pBtTest->Evaluate(pData) != BT_NODE::RUNNING)
     {
         delete (BT_DECORATOR*)pBtTest;
         pBtTest = nullptr;
     }
+
+
+    if (pMacroTree != nullptr && pMacroTree->Evaluate(pData) != BT_NODE::RUNNING)
+    {
+        delete (BT_DECORATOR*)pMacroTree;
+        pMacroTree = nullptr;
+    }
+
 
     /*
     // Send our idle workers to mine minerals so they don't just stand there

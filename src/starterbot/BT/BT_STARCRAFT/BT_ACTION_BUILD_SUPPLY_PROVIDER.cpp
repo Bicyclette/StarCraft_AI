@@ -26,7 +26,10 @@ BT_NODE::State BT_ACTION_BUILD_SUPPLY_PROVIDER::BuildSupplyProvider(void* data)
     const bool startedBuilding = Tools::BuildBuilding(supplyProviderType);
 
     if (startedBuilding)
+    {
+        pData->pylonIsUnderBuild = true;
         BWAPI::Broodwar->printf("Started Building %s", supplyProviderType.getName().c_str());
+    }
 
     return startedBuilding ? BT_NODE::SUCCESS:BT_NODE::FAILURE;
 }

@@ -46,6 +46,8 @@
     <ClInclude Include="..\..\src\starterbot\BT\BT_STARCRAFT\BT_ACTION_BUILD_SUPPLY_PROVIDER.h" />
     <ClInclude Include="..\..\src\starterbot\BT\BT_STARCRAFT\BT_ACTION_SEND_IDLE_WORKER_TO_MINERALS.h" />
     <ClInclude Include="..\..\src\starterbot\BT\BT_STARCRAFT\BT_ACTION_TRAIN_WORKER.h" />
+    <ClInclude Include="..\..\src\starterbot\BT\BT_STARCRAFT\BT_DECO_CONDITION_BUILD_PYLON.h" />
+    <ClInclude Include="..\..\src\starterbot\BT\BT_STARCRAFT\BT_DECO_CONDITION_BUILD_PROBE.h" />
     <ClInclude Include="..\..\src\starterbot\BT\BT_STARCRAFT\BT_DECO_CONDITION_NOT_ENOUGH_SUPPLY.h" />
     <ClInclude Include="..\..\src\starterbot\BT\BT_STARCRAFT\BT_DECO_CONDITION_NOT_ENOUGH_WORKERS.h" />
     <ClInclude Include="..\..\src\starterbot\BT\BT_STARCRAFT\BT_DECO_CONDITION_NOT_ENOUGH_WORKERS_FARMING_MINERALS.h" />
@@ -83,6 +85,8 @@
     <ClCompile Include="..\..\src\starterbot\BT\BT_STARCRAFT\BT_ACTION_BUILD_SUPPLY_PROVIDER.cpp" />
     <ClCompile Include="..\..\src\starterbot\BT\BT_STARCRAFT\BT_ACTION_SEND_IDLE_WORKER_TO_MINERALS.cpp" />
     <ClCompile Include="..\..\src\starterbot\BT\BT_STARCRAFT\BT_ACTION_TRAIN_WORKER.cpp" />
+    <ClCompile Include="..\..\src\starterbot\BT\BT_STARCRAFT\BT_DECO_CONDITION_BUILD_PYLON.cpp" />
+    <ClCompile Include="..\..\src\starterbot\BT\BT_STARCRAFT\BT_DECO_CONDITION_BUILD_PROBE.cpp" />
     <ClCompile Include="..\..\src\starterbot\BT\BT_STARCRAFT\BT_DECO_CONDITION_NOT_ENOUGH_SUPPLY.cpp" />
     <ClCompile Include="..\..\src\starterbot\BT\BT_STARCRAFT\BT_DECO_CONDITION_NOT_ENOUGH_WORKERS.cpp" />
     <ClCompile Include="..\..\src\starterbot\BT\BT_STARCRAFT\BT_DECO_CONDITION_NOT_ENOUGH_WORKERS_FARMING_MINERALS.cpp" />

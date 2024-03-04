@@ -12,6 +12,7 @@ private:
     MapTools m_mapTools;
 	BT_NODE* pBT;
 	BT_NODE* pBtTest;
+	BT_NODE* pMacroTree;
 	Data *pData;
 
 public:

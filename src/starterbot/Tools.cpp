@@ -238,3 +238,20 @@ void Tools::DrawHealthBar(BWAPI::Unit unit, double ratio, BWAPI::Color color, in
         BWAPI::Broodwar->drawLineMap(BWAPI::Position(i, hpTop), BWAPI::Position(i, hpBottom), BWAPI::Colors::Black);
     }
 }
+
+void Tools::UpdateBuildingStatus(Data* pData) {
+    pData->pylonIsUnderBuild = false;
+    pData->gateIsUnderBuild = false;
+    for (auto& unit : BWAPI::Broodwar->self()->getUnits())
+    {
+        if (unit->getType() == BWAPI::UnitTypes::Enum::Protoss_Pylon && !unit->isCompleted())
+        {
+            pData->pylonIsUnderBuild = true;
+        }
+
+        if (unit->getType() == BWAPI::UnitTypes::Enum::Protoss_Gateway && !unit->isCompleted())
+        {
+            pData->gateIsUnderBuild = true;
+        }
+    }
+}

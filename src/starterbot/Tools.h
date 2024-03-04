@@ -1,6 +1,7 @@
 #pragma once
 
 #include <BWAPI.h>
+#include "Data.h"
 
 namespace Tools
 {
@@ -24,4 +25,6 @@ namespace Tools
 
     void DrawUnitHealthBars();
     void DrawHealthBar(BWAPI::Unit unit, double ratio, BWAPI::Color color, int yOffset);
+
+    void UpdateBuildingStatus(Data* pData);
 }
