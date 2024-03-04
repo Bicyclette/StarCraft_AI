@@ -22,4 +22,6 @@ STARTcraft comes with a StarterBot written in C++ using BWAPI 4.4.0. This repo c
 3. Run `windows/RunC++BotAndStarcraft.bat` which will launch the bot executable and Starcraft / BWAPI
 4. Open `windows/visualstudio/StartCraft.sln` in Visual Studio 2022 to modify / recompile the code
 
-test edit
+# Bot
+
+We chose the Protoss race for the bot.
