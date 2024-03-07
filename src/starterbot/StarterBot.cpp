@@ -3,32 +3,22 @@
 #include "MapTools.h"
 #include <Data.h>
 #include <format>
+#include <BuildOrder.h>
 
 #include "BT.h"
 
 StarterBot::StarterBot()
 {
     pData = new Data();
-    StarterBot::setupData();
     pData->currMinerals = 0;
     pData->currSupply = 0;
     pData->currProbes = 0;
     pData->thresholdSupply = 2;
+    pData->probesOnGas = 0;
 
     //Define build order
-    pData->buildOrder[0] = std::make_pair(8, BWAPI::UnitTypes::Enum::Protoss_Pylon);
-    pData->buildOrderExtension[0] = []() {std::cout << "BO-0\n";};
-    pData->buildOrder[1] = std::make_pair(11, BWAPI::UnitTypes::Enum::Protoss_Gateway);
-    pData->buildOrderExtension[1] = []() {std::cout << "BO-1\n";};
-    pData->buildOrder[2] = std::make_pair(12, BWAPI::UnitTypes::Enum::Protoss_Assimilator);
-    pData->buildOrderExtension[2] = []() {std::cout << "BO-2\n";};
-    pData->buildOrder[3] = std::make_pair(13, NULL);
-    pData->buildOrderExtension[3] = []() {std::cout << "BO-3\n";};
-    pData->buildOrder[4] = std::make_pair(14, BWAPI::UnitTypes::Enum::Protoss_Cybernetics_Core);
-    pData->buildOrderExtension[4] = []() {std::cout << "BO-4\n"; Tools::SendProbesToGas(2);};
-    pData->buildOrder[5] = std::make_pair(15, BWAPI::UnitTypes::Enum::Protoss_Pylon);
-    pData->buildOrderExtension[5] = []() {std::cout << "BO-5\n";Tools::SendProbesToGas(1);};
-    pData->buildOrder[6] = std::make_pair(201, NULL);   //201 acts as an unreachable condition, marks the end of BO
+    setupBaseBuildOrder(pData);
+    setUpOneBaseAllIn(pData);
 
 
     //Construction of Macro Tree
@@ -42,20 +32,38 @@ StarterBot::StarterBot()
     //Build units according to general goal
     BT_SELECTOR* pBuildUnitsSelector = new BT_SELECTOR("BuildUnitsSelector", pMTRootSelector, 10);
 
-    BT_DECO_CONDITION_BUILD_PROBE* pBuildProbeCondition = new BT_DECO_CONDITION_BUILD_PROBE("BuildProbeCondition", pBuildUnitsSelector);
+    BT_DECO_CONDITION* pBuildProbeCondition = new BT_DECO_CONDITION("BuildProbeCondition", pBuildUnitsSelector, &buildProbeCondition);
     BT_ACTION_TRAIN_UNIT* pBuildProbeAction = new BT_ACTION_TRAIN_UNIT("BuildProbeAction", pBuildProbeCondition, BWAPI::UnitTypes::Enum::Protoss_Probe);
+
+    BT_DECO_CONDITION* pBuildDragoonCondition = new BT_DECO_CONDITION("BuildDragoonCondition", pBuildUnitsSelector, &buildDragoonCondition);
+    BT_ACTION_TRAIN_UNIT* pBuildDragoonAction = new BT_ACTION_TRAIN_UNIT("BuildDragoonAction", pBuildDragoonCondition, BWAPI::UnitTypes::Enum::Protoss_Dragoon);
+
+    BT_DECO_CONDITION* pBuildZealotCondition = new BT_DECO_CONDITION("BuildZealotCondition", pBuildUnitsSelector, &buildZealotCondition);
+    BT_ACTION_TRAIN_UNIT* pBuildZealotAction = new BT_ACTION_TRAIN_UNIT("BuildZealotAction", pBuildZealotCondition, BWAPI::UnitTypes::Enum::Protoss_Zealot);
 
     //Build buildings according to general goal
     BT_SELECTOR* pBuildBuildingsSelector = new BT_SELECTOR("BuildBuildingsSelector", pMTRootSelector, 10);
 
-    BT_DECO_CONDITION_BUILD_PYLON* pBuildPylonCondition = new BT_DECO_CONDITION_BUILD_PYLON("BuildPylonCondition", pBuildBuildingsSelector);
+    //BT_DECO_CONDITION_BUILD_PYLON* pBuildPylonCondition = new BT_DECO_CONDITION_BUILD_PYLON("BuildPylonCondition", pBuildBuildingsSelector);
+    BT_DECO_CONDITION* pBuildPylonCondition = new BT_DECO_CONDITION("BuildPylonCondition", pBuildBuildingsSelector, &buildPylonCondition);
     BT_ACTION_BUILD_BUILDING* pBuildPylonAction = new BT_ACTION_BUILD_BUILDING("BuildPylonAction", pBuildPylonCondition, BWAPI::UnitTypes::Enum::Protoss_Pylon);
+
+    BT_DECO_CONDITION* pBuildGateCondition = new BT_DECO_CONDITION("BuildGateCondition", pBuildBuildingsSelector, &buildGateCondition);
+    BT_ACTION_BUILD_BUILDING* pBuildgateAction = new BT_ACTION_BUILD_BUILDING("BuildGateAction", pBuildGateCondition, BWAPI::UnitTypes::Enum::Protoss_Gateway);
 
     //Progress build order
     BT_DECO_CONDITION_BO* pBOCondition = new BT_DECO_CONDITION_BO("BOCondition", pMTRootSelector);
     BT_ACTION_BO* pBOAction = new BT_ACTION_BO("BOAction", pBOCondition);
+
+    //Research
+    BT_SELECTOR* pResearchSelector = new BT_SELECTOR("ResearchSelector", pMTRootSelector, 10);
+
+    BT_DECO_CONDITION* pResearchSingularityChargeCondition = new BT_DECO_CONDITION("ResearchSingularityChargeCondition", pResearchSelector, upgradeSingularityChargeCondition);
+    BT_ACTION_UPGRADE* pResearchSingularityChargeAction = new BT_ACTION_UPGRADE("ResearchSingularityChargeAction",
+        pResearchSingularityChargeCondition, BWAPI::UpgradeTypes::Enum::Singularity_Charge);
     
 }
+
 
 // Called when the bot starts!
 void StarterBot::onStart()
@@ -85,7 +93,8 @@ void StarterBot::onFrame()
     Tools::UpdateDataValues(pData);
     Tools::UpdateBuildingStatus(pData);
 
-    //std::cout << pData->currMinerals<<"\n";
+    //pData->show_info();
+
     
     // Run MacroTree
     if (pMacroTree != nullptr && pMacroTree->Evaluate(pData) != BT_NODE::RUNNING)
@@ -172,8 +181,3 @@ void StarterBot::onUnitRenegade(BWAPI::Unit unit)
 	
 }
 
-void StarterBot::setupData() {
-    for (int i = 0; i < Data::buildOrderMaxLength; ++i) {
-        Data::buildOrderExtension[i] = []() {};
-    }
-}

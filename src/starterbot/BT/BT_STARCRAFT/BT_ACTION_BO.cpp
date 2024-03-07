@@ -25,7 +25,7 @@ BT_NODE::State BT_ACTION_BO::ProgressBO(void* data)
 
     if (type)
     {
-        const bool startedBuilding = Tools::BuildBuilding(type);
+        const bool startedBuilding = Tools::MyBuildBuilding(type);
 
         if (startedBuilding)
         {
@@ -36,7 +36,7 @@ BT_NODE::State BT_ACTION_BO::ProgressBO(void* data)
             if (type == BWAPI::UnitTypes::Enum::Protoss_Gateway) {
                 pData->gateIsUnderBuild = true;
             }
-            pData->buildOrderExtension[pData->buildOrderStep]();
+            pData->buildOrderExtension[pData->buildOrderStep](pData);
             pData->buildOrderStep++;
         }
 
@@ -44,7 +44,7 @@ BT_NODE::State BT_ACTION_BO::ProgressBO(void* data)
     }
 
     else {
-        pData->buildOrderExtension[pData->buildOrderStep]();
+        pData->buildOrderExtension[pData->buildOrderStep](pData);
         pData->buildOrderStep++;
         return BT_NODE::SUCCESS;
     }

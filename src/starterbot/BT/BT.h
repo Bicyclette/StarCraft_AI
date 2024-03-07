@@ -30,7 +30,6 @@
 #include "BT_COND_LESSER_THAN.h"
 
 ///Decorator Conditions
-#include "BT_DECO_CONDITION_BUILD_PROBE.h"
 #include "BT_DECO_CONDITION_BUILD_PYLON.h"
 #include "BT_DECO_CONDITION_BO.h"
 
@@ -44,4 +43,5 @@
 #include "BT_ACTION_TRAIN_UNIT.h"
 #include "BT_ACTION_BUILD_BUILDING.h"
 #include "BT_ACTION_BO.h"
+#include "BT_ACTION_UPGRADE.h"
 

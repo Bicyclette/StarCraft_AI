@@ -22,7 +22,7 @@ bool BT_DECO_CONDITION_BUILD_PYLON::doBuildPylon(void* data)
     const int unusedSupply = pData->totalSupply - pData->currSupply;
 
     const bool canBuild = pData->currMinerals >= 100;
-    const bool wantToBuild = pData->autoBuildPylon && !pData->pylonIsUnderBuild && unusedSupply <= pData->thresholdSupply && pData->totalSupply < 200;
+    const bool wantToBuild = pData->autoBuildPylon && !pData->pylonIsUnderBuild && unusedSupply <= pData->thresholdSupply && pData->totalSupply < 400;
 
     return canBuild && wantToBuild;
 

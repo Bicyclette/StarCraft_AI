@@ -4,6 +4,7 @@
 #include "BT.h"
 #include <BWAPI.h>
 #include "Data.h"
+#include "CONDITIONS_CBK.h"
 //#include "map.h"
 
 class StarterBot
@@ -20,9 +21,6 @@ public:
     StarterBot();
 
     // helper functions to get you started with bot programming and learn the API
-    void sendIdleWorkersToMinerals();
-    void trainAdditionalWorkers();
-    void buildAdditionalSupply();
     void drawDebugInformation();
 
     // functions that are triggered by various BWAPI events from main.cpp
@@ -37,5 +35,4 @@ public:
 	void onUnitShow(BWAPI::Unit unit);
 	void onUnitHide(BWAPI::Unit unit);
 	void onUnitRenegade(BWAPI::Unit unit);
-	static void setupData();
 };

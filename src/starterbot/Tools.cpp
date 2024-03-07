@@ -285,23 +285,47 @@ void Tools::UpdateDataValues(Data* pData) {
     pData->currSupply = BWAPI::Broodwar->self()->supplyUsed();
     pData->totalSupply = BWAPI::Broodwar->self()->supplyTotal();
 
+
     int probes = 0;
+    int probesOnGas = 0;
+    int gates = 0;
     const BWAPI::Unitset& myUnits = BWAPI::Broodwar->self()->getUnits();
     for (auto& unit : myUnits)
     {
         if (unit->getType().isWorker())
         {
             probes++;
+            if (unit->isGatheringGas()) {
+                probesOnGas++;
+            }
+        }
+
+        if (unit->getType() == BWAPI::UnitTypes::Enum::Protoss_Gateway) {
+            gates++;
         }
     }
 
     pData->currProbes = probes;
-}
+    pData->currGates = gates;
+    pData->thresholdSupply = 2 + gates * 6;
+    pData->probesOnGas = probesOnGas;
+ }
 
 bool Tools::IsBuildingAvailable(BWAPI::UnitType type) {
     for (auto& unit : BWAPI::Broodwar->self()->getUnits())
     {
-        if (unit->getType() == type && unit->isCompleted() && !unit->isTraining())
+        if (unit->getType() == type && unit->isCompleted() && !unit->isTraining() && !unit->isUpgrading() && !unit->isResearching())
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool Tools::UnitExists(BWAPI::UnitType type) {
+    for (auto& unit : BWAPI::Broodwar->self()->getUnits())
+    {
+        if (unit->getType() == type && unit->isCompleted())
         {
             return true;
         }
@@ -327,4 +351,6 @@ void Tools::SendProbesToGas(int amount) {
             if (amount <= 0) return;
         }
     }
+
+    std::cout << "Not enough probes were sent to gas";
 }

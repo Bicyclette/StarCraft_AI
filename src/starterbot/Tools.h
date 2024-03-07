@@ -30,6 +30,7 @@ namespace Tools
     void UpdateBuildingStatus(Data* pData);
     void UpdateDataValues(Data* pData);
     bool IsBuildingAvailable(BWAPI::UnitType type);
+    bool UnitExists(BWAPI::UnitType type);
 
     void SendProbesToGas(int amount);
 }
