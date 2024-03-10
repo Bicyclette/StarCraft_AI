@@ -1,5 +1,17 @@
 #include "CONDITIONS_CBK.h"
 
+bool sendWorkersToGasCondition(void* data) {
+	Data* pData = static_cast<Data*>(data);
+
+	Tools::UpdateDataValues(pData);
+
+	const bool canDo = Tools::UnitExists(BWAPI::UnitTypes::Enum::Protoss_Assimilator) && pData->currProbes > 0;
+	const bool wantToDo = pData->probesOnGas < pData->wantedProbesOnGas && !pData->justSentToGas;
+	if (pData->justSentToGas) pData->justSentToGas = false;
+
+	return canDo && wantToDo;
+}
+
 bool buildProbeCondition(void* data) {
 	Data* pData = static_cast<Data*>(data);
 
@@ -79,4 +91,23 @@ bool upgradeSingularityChargeCondition(void* data) {
 	// Would be better to check via bwapi if the research is done, but don't know how to
 
 	return canUpgrade;
+}
+
+bool mineralsHigherThan100(void* data) {
+
+	Data* pData = static_cast<Data*>(data);
+
+	Tools::UpdateDataValues(pData);
+	return pData->currMinerals > 100;
+}
+
+bool pylonUnderBuild(void* data) {
+	for (auto& unit : BWAPI::Broodwar->self()->getUnits())
+	{
+		if (unit->getType() == BWAPI::UnitTypes::Enum::Protoss_Pylon && !unit->isCompleted())
+		{
+			return true;
+		}
+	}
+	return false;
 }

@@ -1,6 +1,7 @@
 #pragma once
 #include <unordered_set>
 #include <BWAPI.h>
+#include "WaitForCondition.h"
 
 class Data {
 public:
@@ -13,8 +14,10 @@ public:
 	int thresholdSupply;
 
 	int probesOnGas;
+	bool justSentToGas = false; //There is a delay between "probe is asked to mine" "probe->isGatheringGas() =true"
 
 	int wantedWorkersTotal = 30;
+	int wantedProbesOnGas = 0;
 
 	bool buildProbes = true;
 	bool buildArmy = false;
@@ -30,6 +33,9 @@ public:
 	static const int buildOrderMaxLength = 20;
 	static std::pair<int, BWAPI::UnitType> buildOrder[buildOrderMaxLength];
 	static std::function<void(Data* pData)> buildOrderExtension[buildOrderMaxLength];
+
+
+	std::list<WaitForCondition> waitForConditionList;
 
 	void show_info();
 };

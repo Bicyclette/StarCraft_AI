@@ -40,6 +40,7 @@
 #include "BT_ACTION_LOG.h"
 
 #include "BT_ACTION_SEND_IDLE_WORKER_TO_MINERALS.h"
+#include "BT_ACTION_SEND_WORKERS_TO_GAS.h"
 #include "BT_ACTION_TRAIN_UNIT.h"
 #include "BT_ACTION_BUILD_BUILDING.h"
 #include "BT_ACTION_BO.h"

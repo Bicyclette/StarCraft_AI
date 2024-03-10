@@ -14,7 +14,11 @@ StarterBot::StarterBot()
     pData->currSupply = 0;
     pData->currProbes = 0;
     pData->thresholdSupply = 2;
+    pData->wantedProbesOnGas = 0;
     pData->probesOnGas = 0;
+
+    //Following line left as an example on how to use waitForCondition
+    //pData->waitForConditionList.push_back(WaitForCondition(&mineralsHigherThan100, [](void* pData) {std::cout << "Minerals above 100";}));
 
     //Define build order
     setupBaseBuildOrder(pData);
@@ -24,10 +28,12 @@ StarterBot::StarterBot()
     //Construction of Macro Tree
     pMacroTree = new BT_DECORATOR("EntryPoint", nullptr);
     BT_DECO_REPEATER* pMTForeverRepeater = new BT_DECO_REPEATER("MTRepeatForever", pMacroTree, 0, true, false, true);
-    BT_SELECTOR* pMTRootSelector = new BT_SELECTOR("MTRootSelector", pMTForeverRepeater, 5);
+    BT_SELECTOR* pMTRootSelector = new BT_SELECTOR("MTRootSelector", pMTForeverRepeater, 15);
 
     //Send idle workers to work
     BT_ACTION_SEND_IDLE_WORKER_TO_MINERALS* pSendWorkerToMinerals = new BT_ACTION_SEND_IDLE_WORKER_TO_MINERALS("SendWorkerToMinerals", pMTRootSelector);
+    BT_DECO_CONDITION* pSendWorkersToGasCondition = new BT_DECO_CONDITION("SendWorkersToGasCondition", pMTRootSelector, &sendWorkersToGasCondition);
+    BT_ACTION_SEND_WORKERS_TO_GAS* pSendWorkersToGasAction = new BT_ACTION_SEND_WORKERS_TO_GAS("SendWorkersToGasAction", pSendWorkersToGasCondition);
 
     //Build units according to general goal
     BT_SELECTOR* pBuildUnitsSelector = new BT_SELECTOR("BuildUnitsSelector", pMTRootSelector, 10);
@@ -101,6 +107,20 @@ void StarterBot::onFrame()
     {
         delete (BT_DECORATOR*)pMacroTree;
         pMacroTree = nullptr;
+    }
+
+
+    // Test all of our waiting conditions
+    auto it = pData->waitForConditionList.begin();
+    while (it != pData->waitForConditionList.end()) {
+
+        if (it->evaluate(pData)) {
+            // Erase the current element
+            it = pData->waitForConditionList.erase(it);
+        }
+        else {
+            ++it;
+        }
     }
 
     // Draw unit health bars, which brood war unfortunately does not do
