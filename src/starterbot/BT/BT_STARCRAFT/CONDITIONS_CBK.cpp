@@ -61,10 +61,10 @@ bool buildPylonCondition(void* data) {
 	Tools::UpdateDataValues(pData);
 
 	// Get the amount of supply supply we currently have unused
-	const int unusedSupply = pData->totalSupply - pData->currSupply;
+	const int unusedSupply = Tools::GetTotalSupply(true) - pData->currSupply;
 
 	const bool canBuild = pData->currMinerals >= 100;
-	const bool wantToBuild = pData->autoBuildPylon && !pData->pylonIsUnderBuild && unusedSupply <= pData->thresholdSupply && pData->totalSupply < 400;
+	const bool wantToBuild = pData->autoBuildPylon && unusedSupply <= pData->thresholdSupply && pData->totalSupply < 400;
 
 	return canBuild && wantToBuild;
 
@@ -110,4 +110,24 @@ bool pylonUnderBuild(void* data) {
 		}
 	}
 	return false;
+}
+
+bool initialAttackCondition(void* data) {
+
+	Data* pData = static_cast<Data*>(data);
+
+	const BWAPI::Unitset& myUnits = BWAPI::Broodwar->self()->getUnits();
+
+	int totalAttackUnits = 0;
+	const std::list<BWAPI::UnitType> attackUnits = { BWAPI::UnitTypes::Enum::Protoss_Zealot, BWAPI::UnitTypes::Enum::Protoss_Dragoon };
+
+	for (auto& unit : myUnits)
+	{
+		if (unit->isCompleted() && std::find(attackUnits.begin(), attackUnits.end(), unit->getType()) != attackUnits.end())
+		{
+			totalAttackUnits++;
+		}
+	}
+
+	return totalAttackUnits>10;
 }

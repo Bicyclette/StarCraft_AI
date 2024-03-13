@@ -354,3 +354,18 @@ void Tools::SendProbesToGas(int amount) {
 
     std::cout << "Not enough probes were sent to gas";
 }
+
+void Tools::sendUnitsAcross() {
+    const std::list<BWAPI::UnitType> attackUnits = {BWAPI::UnitTypes::Enum::Protoss_Zealot, BWAPI::UnitTypes::Enum::Protoss_Dragoon};
+
+    const BWAPI::Unitset& myUnits = BWAPI::Broodwar->self()->getUnits();
+    const BWAPI::Position opponentPosition = BWAPI::Position(BWAPI::Broodwar->enemy()->getStartLocation());
+
+    for (auto& unit : myUnits)
+    {
+        if (unit->isCompleted() && std::find(attackUnits.begin(), attackUnits.end(), unit->getType()) != attackUnits.end())
+        {
+            unit->attack(opponentPosition, false);
+        }
+    }
+}

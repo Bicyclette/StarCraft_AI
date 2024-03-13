@@ -47,8 +47,14 @@ void setUpOneBaseAllIn(Data* pData) {
             pData->wantedProbesOnGas = 3;
             pData->autoBuildPylon = true;
             pData->autoBuildGate = true;
+        };
+
+    pData->buildOrder[7] = std::make_pair(17, NULL);
+    pData->buildOrderExtension[7] = [](Data* pData)
+        {
+            std::cout << "BO-7\n";
             pData->buildArmy = true;
         };
 
-    pData->buildOrder[7] = std::make_pair(1000, NULL);   //1000 acts as an unreachable condition, marks the end of BO
+    pData->buildOrder[8] = std::make_pair(1000, NULL);   //1000 acts as an unreachable condition, marks the end of BO
 }

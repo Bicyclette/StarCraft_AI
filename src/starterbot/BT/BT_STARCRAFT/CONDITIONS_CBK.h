@@ -18,3 +18,6 @@ bool upgradeSingularityChargeCondition(void* data);
 bool mineralsHigherThan100(void* data);
 
 bool pylonUnderBuild(void* data);
+
+
+bool initialAttackCondition(void* data);

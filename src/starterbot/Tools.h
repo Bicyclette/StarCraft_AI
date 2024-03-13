@@ -33,4 +33,7 @@ namespace Tools
     bool UnitExists(BWAPI::UnitType type);
 
     void SendProbesToGas(int amount);
+
+
+    void sendUnitsAcross();
 }

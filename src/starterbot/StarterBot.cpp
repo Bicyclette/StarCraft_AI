@@ -24,6 +24,12 @@ StarterBot::StarterBot()
     setupBaseBuildOrder(pData);
     setUpOneBaseAllIn(pData);
 
+    pData->waitForConditionList.push_back(WaitForCondition(&initialAttackCondition, [](void* pData) 
+        {
+            std::cout << "Attaaaaaaaack !";
+            Tools::sendUnitsAcross();
+        }));
+
 
     //Construction of Macro Tree
     pMacroTree = new BT_DECORATOR("EntryPoint", nullptr);
@@ -50,7 +56,6 @@ StarterBot::StarterBot()
     //Build buildings according to general goal
     BT_SELECTOR* pBuildBuildingsSelector = new BT_SELECTOR("BuildBuildingsSelector", pMTRootSelector, 10);
 
-    //BT_DECO_CONDITION_BUILD_PYLON* pBuildPylonCondition = new BT_DECO_CONDITION_BUILD_PYLON("BuildPylonCondition", pBuildBuildingsSelector);
     BT_DECO_CONDITION* pBuildPylonCondition = new BT_DECO_CONDITION("BuildPylonCondition", pBuildBuildingsSelector, &buildPylonCondition);
     BT_ACTION_BUILD_BUILDING* pBuildPylonAction = new BT_ACTION_BUILD_BUILDING("BuildPylonAction", pBuildPylonCondition, BWAPI::UnitTypes::Enum::Protoss_Pylon);
 
@@ -101,7 +106,7 @@ void StarterBot::onFrame()
 
     //pData->show_info();
 
-    
+
     // Run MacroTree
     if (pMacroTree != nullptr && pMacroTree->Evaluate(pData) != BT_NODE::RUNNING)
     {
