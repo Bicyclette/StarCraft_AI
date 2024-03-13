@@ -38,12 +38,49 @@ In the implemented strategy, the main units are Probes for mining and constructi
 
 ### Data Structures
 
-*Here will follow the description and representation of the BT we have implemented*
+The main bot is following a behaviour tree for most of his behaviour. We have developped in parallele other data structure such as Final State Machine (FSM) that are described later on with the Build-Order State Diagram.
 
 ```mermaid
 flowchart TD
 
-A{Entry Point} --> B{Repeat Forever}
+A{Entry Point} --> BB{Repeat Forever}
+BB --> MainSelector(Main Loop Selector)
+MainSelector --> WorkersActionMinerals{{Action Farm Minerals}}
+MainSelector --> WorkersDecoratorGas{Send workers to gas}
+WorkersDecoratorGas --> WorkersActionGas{{send worker to gas}}
+
+
+
+MainSelector --> UnitSelector(Build Units)
+
+UnitSelector --> ProbeDecoratorBuild{Build Probe}
+ProbeDecoratorBuild --> ProbeActionBuild{{Build Probe}}
+
+UnitSelector --> DragoonDecoratorBuild{Build Dragoon}
+DragoonDecoratorBuild --> DragoonActionBuild{{Build Dragoon}}
+
+UnitSelector --> ZealotDecoratorBuild{Build Zealot}
+ZealotDecoratorBuild --> ZealotActionBuild{{Build Zealot}}
+
+
+
+MainSelector --> BuildingSelector(Build Buildings)
+
+BuildingSelector --> PylonDecoratorBuild{Build Pylon}
+PylonDecoratorBuild --> PylonActionBuild{{Build Pylon}}
+
+BuildingSelector --> GateDecoratorBuild{Build Gate}
+GateDecoratorBuild --> GateActionBuild{{Build Gate}}
+
+
+MainSelector --> ResearchSelector(Research Technology)
+
+ResearchSelector --> ResearchDecoratorSingularity{Research Singularity Charge}
+ResearchDecoratorSingularity --> ResearchActionSingularity{{Research Singularity}}
+
+
+MainSelector --> BuildOrderSelector(Follow Build Order State Diagram)
+
 ```
 
 ### Debugging features
