@@ -69,6 +69,9 @@ MainSelector --> BuildingSelector(Build Buildings)
 BuildingSelector --> PylonDecoratorBuild{Build Pylon}
 PylonDecoratorBuild --> PylonActionBuild{{Build Pylon}}
 
+BuildingSelector --> AssimilatorDecoratorBuild{Build Assimilator}
+AssimilatorDecoratorBuild --> AssimilatorActionBuild{{Build Assimilator}}
+
 BuildingSelector --> GateDecoratorBuild{Build Gate}
 GateDecoratorBuild --> GateActionBuild{{Build Gate}}
 
