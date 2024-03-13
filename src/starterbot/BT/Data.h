@@ -23,6 +23,7 @@ public:
 	bool buildArmy = false;
 	bool autoBuildPylon = false;
 	bool autoBuildGate = false;
+	bool autoBuildAssimilator = false;
 
 	bool pylonIsUnderBuild = false;
 	bool gateIsUnderBuild = false;

@@ -28,7 +28,8 @@ StarterBot::StarterBot()
         {
             Data* pData = static_cast<Data*>(data);
             std::cout << "Attaaaaaaaack !";
-            Tools::sendUnitsAcross(pData);
+            Tools::sendUnitsTo(pData->enemyPosition);
+            Tools::setGateRallyPoints(pData->enemyPosition);
         }));
 
 
@@ -59,6 +60,9 @@ StarterBot::StarterBot()
 
     BT_DECO_CONDITION* pBuildPylonCondition = new BT_DECO_CONDITION("BuildPylonCondition", pBuildBuildingsSelector, &buildPylonCondition);
     BT_ACTION_BUILD_BUILDING* pBuildPylonAction = new BT_ACTION_BUILD_BUILDING("BuildPylonAction", pBuildPylonCondition, BWAPI::UnitTypes::Enum::Protoss_Pylon);
+
+    BT_DECO_CONDITION* pBuildAssimilatorCondition = new BT_DECO_CONDITION("BuildAssimilatorCondition", pBuildBuildingsSelector, &buildAssimilatorCondition);
+    BT_ACTION_BUILD_BUILDING* pBuildAssimilatorAction = new BT_ACTION_BUILD_BUILDING("BuildAssimilatorAction", pBuildAssimilatorCondition, BWAPI::UnitTypes::Enum::Protoss_Assimilator);
 
     BT_DECO_CONDITION* pBuildGateCondition = new BT_DECO_CONDITION("BuildGateCondition", pBuildBuildingsSelector, &buildGateCondition);
     BT_ACTION_BUILD_BUILDING* pBuildgateAction = new BT_ACTION_BUILD_BUILDING("BuildGateAction", pBuildGateCondition, BWAPI::UnitTypes::Enum::Protoss_Gateway);

@@ -333,8 +333,22 @@ bool Tools::UnitExists(BWAPI::UnitType type) {
     return false;
 }
 
+bool Tools::BuildingExistsOrOrderToBuildGiven(BWAPI::UnitType type) {
+    for (auto& unit : BWAPI::Broodwar->self()->getUnits())
+    {
+        if (unit->getType() == type) { return true; }
+        
+        const BWAPI::UnitCommand& command = unit->getLastCommand();
+
+        if (command.getType() != BWAPI::UnitCommandTypes::Build) { continue; }
+
+        if (command.getUnitType() == type) { return true; };
+    }
+
+    return false;
+}
+
 void Tools::SendProbesToGas(int amount) {
-    int leftToSend = amount;
     const BWAPI::Unit myAssimilator = Tools::GetUnitOfType(BWAPI::UnitTypes::Enum::Protoss_Assimilator);
 
     if (myAssimilator)
@@ -355,7 +369,7 @@ void Tools::SendProbesToGas(int amount) {
     std::cout << "Not enough probes were sent to gas";
 }
 
-void Tools::sendUnitsAcross(Data* pData) {
+void Tools::sendUnitsTo(BWAPI::Position target) {
     const std::list<BWAPI::UnitType> attackUnits = {BWAPI::UnitTypes::Enum::Protoss_Zealot, BWAPI::UnitTypes::Enum::Protoss_Dragoon};
 
     const BWAPI::Unitset& myUnits = BWAPI::Broodwar->self()->getUnits();
@@ -364,7 +378,17 @@ void Tools::sendUnitsAcross(Data* pData) {
     {
         if (unit->isCompleted() && std::find(attackUnits.begin(), attackUnits.end(), unit->getType()) != attackUnits.end())
         {
-            unit->attack(pData->enemyPosition, false);
+            unit->attack(target, false);
+        }
+    }
+}
+
+void Tools::setGateRallyPoints(BWAPI::Position target) {
+    const BWAPI::Unitset& myUnits = BWAPI::Broodwar->self()->getUnits();
+
+    for (auto& unit : myUnits) {
+        if (unit->getType() == BWAPI::UnitTypes::Enum::Protoss_Gateway) {
+            unit->setRallyPoint(target);
         }
     }
 }

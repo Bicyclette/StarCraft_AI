@@ -28,8 +28,12 @@ void setUpOneBaseAllIn(Data* pData) {
     pData->buildOrder[2] = std::make_pair(10, BWAPI::UnitTypes::Enum::Protoss_Gateway);
     pData->buildOrderExtension[2] = [](Data* pData) {std::cout << "BO-2\n";};
 
-    pData->buildOrder[3] = std::make_pair(11, BWAPI::UnitTypes::Enum::Protoss_Assimilator);
-    pData->buildOrderExtension[3] = [](Data* pData) {std::cout << "BO-3\n";};
+    pData->buildOrder[3] = std::make_pair(11, NULL);
+    pData->buildOrderExtension[3] = [](Data* pData) 
+        {
+            std::cout << "BO-3\n";
+            pData->autoBuildAssimilator = true;
+        };
 
     pData->buildOrder[4] = std::make_pair(12, NULL);
     pData->buildOrderExtension[4] = [](Data* pData) {std::cout << "BO-4\n"; pData->wantedProbesOnGas = 2;};

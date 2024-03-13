@@ -12,6 +12,7 @@ bool buildZealotCondition(void* data);
 
 bool buildPylonCondition(void* data);
 bool buildGateCondition(void* data);
+bool buildAssimilatorCondition(void* data);
 
 bool upgradeSingularityChargeCondition(void* data);
 

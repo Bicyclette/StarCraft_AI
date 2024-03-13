@@ -67,7 +67,6 @@ bool buildPylonCondition(void* data) {
 	const bool wantToBuild = pData->autoBuildPylon && unusedSupply <= pData->thresholdSupply && pData->totalSupply < 400;
 
 	return canBuild && wantToBuild;
-
 }
 
 
@@ -79,6 +78,17 @@ bool buildGateCondition(void* data) {
 	const bool wantToBuild = pData->autoBuildGate && pData->currMinerals >= 250 && !pData->gateIsUnderBuild && pData->currGates < 6;
 
 	return  wantToBuild;
+}
+
+bool buildAssimilatorCondition(void* data) {
+	Data* pData = static_cast<Data*>(data);
+
+	Tools::UpdateDataValues(pData);
+
+	const bool wantToBuild = pData->autoBuildAssimilator && !Tools::BuildingExistsOrOrderToBuildGiven(BWAPI::UnitTypes::Enum::Protoss_Assimilator);
+	const bool canBuild = pData->currMinerals >= 100;
+
+	return  wantToBuild && canBuild;
 }
 
 bool upgradeSingularityChargeCondition(void* data) {

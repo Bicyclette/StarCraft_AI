@@ -31,9 +31,11 @@ namespace Tools
     void UpdateDataValues(Data* pData);
     bool IsBuildingAvailable(BWAPI::UnitType type);
     bool UnitExists(BWAPI::UnitType type);
+    bool BuildingExistsOrOrderToBuildGiven(BWAPI::UnitType type);
 
     void SendProbesToGas(int amount);
 
 
-    void sendUnitsAcross(Data* pData);
+    void sendUnitsTo(BWAPI::Position target);
+    void setGateRallyPoints(BWAPI::Position target);
 }
