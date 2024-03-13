@@ -40,6 +40,12 @@ In the implemented strategy, the main units are Probes for mining and constructi
 
 *Here will follow the description and representation of the BT we have implemented*
 
+```mermaid
+flowchart TD
+
+A{Entry Point} --> B{Repeat Forever}
+```
+
 ### Debugging features
 
 The other features are mainly for debugging and confort, which are the ones already present in the initial code :
