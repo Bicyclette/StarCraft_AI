@@ -14,21 +14,27 @@ The bot is developped on StarCraft : Brood War using the BWAPI library with the 
 
 ## Bot Strategy
 
-The overall strategy of the bot is to follow a certain build oder, i.e. deterministic actions during the game. When a condition is met, the bot
-starts building or creating units, depending on the other statistics, like number of units or resource.
-Once the determined build order is completed, the bot is set on 'automatic mode' to deal with these tasks.
-For the winning strategy, we chose our bot to be directly offensive. Depending on the race of the enemy, dealing with their units will be different.
+The overall strategy of the bot is to follow a certain build oder, i.e. deterministic actions during the game. This is gradually incremented during the 
+game to follow the said order, depending on what stage of the game is bot is actually in.\
+Once the determined build order is completed, the bot is set on 'automatic mode' to deal with these tasks more independently.\
+In parallel, a behavior tree can describe the management of units and resources. When a condition is met, the bot starts building or
+creating units, depending on the other statistics, like number of units or resource. (see below for details : Data Structures)\
+
+*use of scout ?*
+
+For the battling strategy, we chose our bot to be rather offensive. Depending on the race of the enemy, the way of dealing with their units will
+be different.
 Typically, a Zerg enemy is known to be handled more easily when gated, therefore in this case, the bot should build a bottleneck at the entrance of 
-the base with buildings, in order to deal with each enemy unit one by one.
+the base with buildings.
 
 ### Units and Technology Branch
 
 Following the specific build order, the exploration of the technology branch is constrained to stay efficient.
-The developed technology is the vital buildings (Pylons and resource extraction buildings), and, on the other hand, basic buildings to produce
-battling units. In depth, the exploration does not go deeper than Cybernetic Cores.
+The developed technology is the vital buildings (Pylons and Assimilators), and, on the other hand, basic buildings to produce battling units.
+In depth, the exploration does not go deeper than Cybernetic Cores.\
 In the implemented strategy, the main units are Probes for mining and construction, and Dragoons for efficient offensive power. 
 
-*send scout or not ? (impending)*
+*send scout ? (impending)*
 
 ### Data Structures
 
