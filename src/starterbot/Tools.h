@@ -35,5 +35,5 @@ namespace Tools
     void SendProbesToGas(int amount);
 
 
-    void sendUnitsAcross();
+    void sendUnitsAcross(Data* pData);
 }

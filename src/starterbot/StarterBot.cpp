@@ -24,10 +24,11 @@ StarterBot::StarterBot()
     setupBaseBuildOrder(pData);
     setUpOneBaseAllIn(pData);
 
-    pData->waitForConditionList.push_back(WaitForCondition(&initialAttackCondition, [](void* pData) 
+    pData->waitForConditionList.push_back(WaitForCondition(&initialAttackCondition, [](void* data) 
         {
+            Data* pData = static_cast<Data*>(data);
             std::cout << "Attaaaaaaaack !";
-            Tools::sendUnitsAcross();
+            Tools::sendUnitsAcross(pData);
         }));
 
 
@@ -80,9 +81,9 @@ StarterBot::StarterBot()
 void StarterBot::onStart()
 {
     // Set our BWAPI options here    
-	BWAPI::Broodwar->setLocalSpeed(10);
+    BWAPI::Broodwar->setLocalSpeed(10);
     BWAPI::Broodwar->setFrameSkip(0);
-    
+
     // Enable the flag that tells BWAPI top let users enter input while bot plays
     BWAPI::Broodwar->enableFlag(BWAPI::Flag::UserInput);
 
@@ -91,7 +92,15 @@ void StarterBot::onStart()
 
     //Bwem
     //BWEM::Map::Instance().Initialize(BWAPI::BroodwarPtr);
-    
+
+    const std::deque<BWAPI::TilePosition> startLocations = BWAPI::Broodwar->getStartLocations();
+
+    if (startLocations[0] == BWAPI::Broodwar->self()->getStartLocation()) {
+        pData->enemyPosition = BWAPI::Position(startLocations[1]);
+    }
+    else {
+        pData->enemyPosition = BWAPI::Position(startLocations[0]);
+    }
 }
 
 // Called on each frame of the game

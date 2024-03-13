@@ -34,6 +34,7 @@ public:
 	static std::pair<int, BWAPI::UnitType> buildOrder[buildOrderMaxLength];
 	static std::function<void(Data* pData)> buildOrderExtension[buildOrderMaxLength];
 
+	BWAPI::Position enemyPosition;
 
 	std::list<WaitForCondition> waitForConditionList;
 
