@@ -1,27 +1,39 @@
-# STARTcraft
+# INF584 - Starcraft Bot
 
-Get started with Starcraft: BroodWar AI Development as fast as possible.
+## Team Members
 
-New to StarCraft or AI Programming? Watch the tutorial video(s):
+- Emeric Marguet
+- Sakula Hys
+- Mathias Velo
+- Eyal Benaroche
 
-- Starcraft AI Intro: https://www.youtube.com/watch?v=czhNqUxmLks
-- STARTcraft Tutorial: https://www.youtube.com/watch?v=FEEkO6__GKw
+## Project Description
 
-Currently Supported (more coming soon):
+The goal of this project is to create a **Protoss Bot** and beat other players in the course of the INF584A course at Ecole Polytechnique.
+The bot is developped on starcraft Brood of War using the BWAPI library with the original codebase of [Dave Churchill](https://github.com/davechurchill/STARTcraft)
 
-- Windows / C++ Development using BWAPI
+## Bot Strategy
 
-# Setup Instructions:
+### Units and Technology Branch
 
-## Windows / C++
+### Data Structures
 
-STARTcraft comes with a StarterBot written in C++ using BWAPI 4.4.0. This repo comes with BWAPI, and uses Injectory to launch StarCraft with BWAPI, so Chaoslauncher is not required.
+*Here will follow the description and representation of the BT we have implemented*
 
-1. Download / Clone this repo to your computer
+### Debugging features
+
+### Distribution of tasks
+
+## Setup Instructions:
+
+This project can only run on Windows and the Starcraft game must be downloaded separately and then put on the `/windows/starcraft/` folder.
+
+1. git clone this repository 
+
+```bash
+git clone https://github.com/Bicyclette/StarCraft_AI.git
+```
+
 2. Download and unzip [Starcraft Broodwar 1.16.1](http://www.cs.mun.ca/~dchurchill/startcraft/scbw_bwapi440.zip) to the included `windows/starcraft` folder
-3. Run `windows/RunC++BotAndStarcraft.bat` which will launch the bot executable and Starcraft / BWAPI
+3. Run `windows/bin/RunStarterBotAndStarcraft.bat` which will launch the bot executable and Starcraft / BWAPI
 4. Open `windows/visualstudio/StartCraft.sln` in Visual Studio 2022 to modify / recompile the code
-
-# Bot
-
-We chose the Protoss race for the bot.
