@@ -21,4 +21,5 @@ windows/starcraft
 *.pdb
 *.ilk
 *.ERR
+.vs/
 bin/StarterBot_d.exe
