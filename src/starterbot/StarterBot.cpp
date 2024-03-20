@@ -24,19 +24,16 @@ StarterBot::StarterBot()
     setupBaseBuildOrder(pData);
     setUpOneBaseAllIn(pData);
 
-    pData->waitForConditionList.push_back(WaitForCondition(&initialAttackCondition, [](void* data) 
-        {
-            Data* pData = static_cast<Data*>(data);
-            std::cout << "Attaaaaaaaack !";
-            Tools::sendUnitsTo(pData->enemyPosition);
-            Tools::setGateRallyPoints(pData->enemyPosition);
-        }));
-
-
     //Construction of Macro Tree
     pMacroTree = new BT_DECORATOR("EntryPoint", nullptr);
     BT_DECO_REPEATER* pMTForeverRepeater = new BT_DECO_REPEATER("MTRepeatForever", pMacroTree, 0, true, false, true);
     BT_SELECTOR* pMTRootSelector = new BT_SELECTOR("MTRootSelector", pMTForeverRepeater, 15);
+
+    BT_DECO_CONDITION* pSendTroopsCondition = new BT_DECO_CONDITION("SendTroopsCondition", pMTRootSelector, &sendTroopsCondition);
+    BT_ACTION_SEND_TROOPS* pSendTroopsAction = new BT_ACTION_SEND_TROOPS("SendTroopsAction", pSendTroopsCondition);
+
+    BT_DECO_CONDITION* pAttackCondition = new BT_DECO_CONDITION("AttackCondition", pMTRootSelector, &attackTroopsCondition);
+    BT_ACTION_ATTACK_TROOPS* pAttackAction = new BT_ACTION_ATTACK_TROOPS("AttackAction", pAttackCondition);
 
     //Send idle workers to work
     BT_ACTION_SEND_IDLE_WORKER_TO_MINERALS* pSendWorkerToMinerals = new BT_ACTION_SEND_IDLE_WORKER_TO_MINERALS("SendWorkerToMinerals", pMTRootSelector);
@@ -101,10 +98,14 @@ void StarterBot::onStart()
 
     if (startLocations[0] == BWAPI::Broodwar->self()->getStartLocation()) {
         pData->enemyPosition = BWAPI::Position(startLocations[1]);
+        pData->basePosition = BWAPI::Position(startLocations[0]);
     }
     else {
         pData->enemyPosition = BWAPI::Position(startLocations[0]);
+        pData->basePosition = BWAPI::Position(startLocations[1]);
     }
+
+    pData->rallyPosition = (pData->basePosition + pData->enemyPosition * 3) / 4;
 }
 
 // Called on each frame of the game

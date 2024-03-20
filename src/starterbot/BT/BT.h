@@ -39,6 +39,9 @@
 #include "BT_ACTION_WAIT.h"
 #include "BT_ACTION_LOG.h"
 
+#include "BT_ACTION_SEND_TROOPS.h"
+#include "BT_ACTION_ATTACK_TROOPS.h"
+
 #include "BT_ACTION_SEND_IDLE_WORKER_TO_MINERALS.h"
 #include "BT_ACTION_SEND_WORKERS_TO_GAS.h"
 #include "BT_ACTION_TRAIN_UNIT.h"

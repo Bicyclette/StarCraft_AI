@@ -289,6 +289,10 @@ void Tools::UpdateDataValues(Data* pData) {
     int probes = 0;
     int probesOnGas = 0;
     int gates = 0;
+
+    BWAPI::Unitset armyAtBase = BWAPI::Unitset();
+    BWAPI::Unitset armyAtRally = BWAPI::Unitset();
+
     const BWAPI::Unitset& myUnits = BWAPI::Broodwar->self()->getUnits();
     for (auto& unit : myUnits)
     {
@@ -300,15 +304,42 @@ void Tools::UpdateDataValues(Data* pData) {
             }
         }
 
-        if (unit->getType() == BWAPI::UnitTypes::Enum::Protoss_Gateway) {
+        if (unit->getType() == BWAPI::UnitTypes::Enum::Protoss_Gateway) 
+        {
             gates++;
         }
+
+        if (unit->getType() == BWAPI::UnitTypes::Enum::Protoss_Zealot) 
+        {
+            if (unit->getDistance(pData->rallyPosition) < 100)
+			{
+				armyAtRally.insert(unit);
+            }
+            else if (unit->getDistance(pData->basePosition) < 500) {
+				armyAtBase.insert(unit);
+            }
+		}
+
+        if (unit->getType() == BWAPI::UnitTypes::Enum::Protoss_Dragoon)
+        {
+            if (unit->getDistance(pData->rallyPosition) < 100)
+			{
+				armyAtRally.insert(unit);
+            }
+            else if (unit->getDistance(pData->basePosition) < 500) {
+                armyAtBase.insert(unit);
+            }
+
+        }
+
     }
 
     pData->currProbes = probes;
     pData->currGates = gates;
     pData->thresholdSupply = 2 + gates * 6;
     pData->probesOnGas = probesOnGas;
+    pData->armyAtBase = armyAtBase;
+    pData->armyAtRally = armyAtRally;
  }
 
 bool Tools::IsBuildingAvailable(BWAPI::UnitType type) {

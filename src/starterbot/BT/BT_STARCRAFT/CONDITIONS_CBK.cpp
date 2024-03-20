@@ -122,6 +122,44 @@ bool pylonUnderBuild(void* data) {
 	return false;
 }
 
+bool sendTroopsCondition(void* data) {
+	Data* pData = static_cast<Data*>(data);
+
+	Tools::UpdateDataValues(pData);
+
+	const int totalAttackUnitsAtBase = pData->armyAtBase.size();
+	//int totalAttackUnitsAtRally = pData->armyAtRally.size();
+	const bool wantToDo = totalAttackUnitsAtBase > 5;
+	const bool canDo = !pData->sendingToRally;
+
+	// TODO : update to send multiple times to rally and not just once
+
+	return canDo && wantToDo;
+}
+
+bool attackTroopsCondition(void* data) {
+	Data* pData = static_cast<Data*>(data);
+
+	Tools::UpdateDataValues(pData);
+	const int totalAttackUnitsAtRally = pData->armyAtRally.size();
+	const bool wantToDo = totalAttackUnitsAtRally > 4;
+
+	std::cout << "Army at rally: " << totalAttackUnitsAtRally << std::endl;
+	const bool canDo = !pData->attacking;
+
+	// Create a squad of units that will attack the base
+	if (canDo && wantToDo) {
+		pData->attacking = true;
+		for (auto& unit : pData->armyAtRally)
+		{
+			pData->armyAttacking.insert(unit);
+		}
+	}
+	
+	return canDo && wantToDo;
+
+}
+
 bool initialAttackCondition(void* data) {
 
 	Data* pData = static_cast<Data*>(data);

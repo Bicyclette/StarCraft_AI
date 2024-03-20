@@ -43,8 +43,10 @@
     <ClInclude Include="..\..\src\starterbot\BT\BT_PARALLEL_SEQUENCER.h" />
     <ClInclude Include="..\..\src\starterbot\BT\BT_SELECTOR.h" />
     <ClInclude Include="..\..\src\starterbot\BT\BT_SEQUENCER.h" />
+    <ClInclude Include="..\..\src\starterbot\BT\BT_STARCRAFT\BT_ACTION_ATTACK_TROOPS.h" />
     <ClInclude Include="..\..\src\starterbot\BT\BT_STARCRAFT\BT_ACTION_BO.h" />
     <ClInclude Include="..\..\src\starterbot\BT\BT_STARCRAFT\BT_ACTION_BUILD_BUILDING.h" />
+    <ClInclude Include="..\..\src\starterbot\BT\BT_STARCRAFT\BT_ACTION_SEND_TROOPS.h" />
     <ClInclude Include="..\..\src\starterbot\BT\BT_STARCRAFT\BT_ACTION_SEND_WORKERS_TO_GAS.h" />
     <ClInclude Include="..\..\src\starterbot\BT\BT_STARCRAFT\BT_ACTION_UPGRADE.h" />
     <ClInclude Include="..\..\src\starterbot\BT\BT_STARCRAFT\BT_ACTION_SEND_IDLE_WORKER_TO_MINERALS.h" />
@@ -84,8 +86,10 @@
     <ClCompile Include="..\..\src\starterbot\BT\BT_PARALLEL_SEQUENCER.cpp" />
     <ClCompile Include="..\..\src\starterbot\BT\BT_SELECTOR.cpp" />
     <ClCompile Include="..\..\src\starterbot\BT\BT_SEQUENCER.cpp" />
+    <ClCompile Include="..\..\src\starterbot\BT\BT_STARCRAFT\BT_ACTION_ATTACK_TROOPS.cpp" />
     <ClCompile Include="..\..\src\starterbot\BT\BT_STARCRAFT\BT_ACTION_BO.cpp" />
     <ClCompile Include="..\..\src\starterbot\BT\BT_STARCRAFT\BT_ACTION_BUILD_BUILDING.cpp" />
+    <ClCompile Include="..\..\src\starterbot\BT\BT_STARCRAFT\BT_ACTION_SEND_TROOPS.cpp" />
     <ClCompile Include="..\..\src\starterbot\BT\BT_STARCRAFT\BT_ACTION_SEND_WORKERS_TO_GAS.cpp" />
     <ClCompile Include="..\..\src\starterbot\BT\BT_STARCRAFT\BT_ACTION_UPGRADE.cpp" />
     <ClCompile Include="..\..\src\starterbot\BT\BT_STARCRAFT\BT_ACTION_SEND_IDLE_WORKER_TO_MINERALS.cpp" />

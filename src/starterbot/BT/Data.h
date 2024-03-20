@@ -19,6 +19,20 @@ public:
 	int wantedWorkersTotal = 30;
 	int wantedProbesOnGas = 0;
 
+	// Army Units
+
+	int currZealots;
+	int currDragoons;
+	int zealotsAtRally;
+	int dragoonsAtRally;
+
+	BWAPI::Unitset armyAtBase = BWAPI::Unitset();
+	BWAPI::Unitset armyAtRally = BWAPI::Unitset();
+	BWAPI::Unitset armyAttacking = BWAPI::Unitset();
+
+	bool sendingToRally = false;
+	bool attacking = false;
+
 	bool buildProbes = true;
 	bool buildArmy = false;
 	bool autoBuildPylon = false;
@@ -36,6 +50,8 @@ public:
 	static std::function<void(Data* pData)> buildOrderExtension[buildOrderMaxLength];
 
 	BWAPI::Position enemyPosition;
+	BWAPI::Position basePosition;
+	BWAPI::Position rallyPosition;
 
 	std::list<WaitForCondition> waitForConditionList;
 
