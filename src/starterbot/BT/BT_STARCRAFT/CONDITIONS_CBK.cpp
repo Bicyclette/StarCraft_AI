@@ -129,10 +129,15 @@ bool sendTroopsCondition(void* data) {
 
 	const int totalAttackUnitsAtBase = pData->armyAtBase.size();
 	//int totalAttackUnitsAtRally = pData->armyAtRally.size();
-	const bool wantToDo = totalAttackUnitsAtBase > 5;
+	const bool wantToDo = totalAttackUnitsAtBase > 4;
 	const bool canDo = !pData->sendingToRally;
 
-	// TODO : update to send multiple times to rally and not just once
+	// The multiple time behaviour is handled in the update function for data
+	// it resets the "sendingToRally" bool to false when enough units (more than the current
+	// value defined in this function) are at the base
+	// This is done to avoid sending the order to base units to go to rally
+	// at every frame when the condition is met
+
 
 	return canDo && wantToDo;
 }
@@ -144,7 +149,6 @@ bool attackTroopsCondition(void* data) {
 	const int totalAttackUnitsAtRally = pData->armyAtRally.size();
 	const bool wantToDo = totalAttackUnitsAtRally > 4;
 
-	std::cout << "Army at rally: " << totalAttackUnitsAtRally << std::endl;
 	const bool canDo = !pData->attacking;
 
 	// Create a squad of units that will attack the base

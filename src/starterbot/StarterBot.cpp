@@ -29,10 +29,11 @@ StarterBot::StarterBot()
     BT_DECO_REPEATER* pMTForeverRepeater = new BT_DECO_REPEATER("MTRepeatForever", pMacroTree, 0, true, false, true);
     BT_SELECTOR* pMTRootSelector = new BT_SELECTOR("MTRootSelector", pMTForeverRepeater, 15);
 
-    BT_DECO_CONDITION* pSendTroopsCondition = new BT_DECO_CONDITION("SendTroopsCondition", pMTRootSelector, &sendTroopsCondition);
+    BT_SELECTOR* pAttackSelector = new BT_SELECTOR("AttackSelector", pMTRootSelector, 10);
+    BT_DECO_CONDITION* pSendTroopsCondition = new BT_DECO_CONDITION("SendTroopsCondition", pAttackSelector, &sendTroopsCondition);
     BT_ACTION_SEND_TROOPS* pSendTroopsAction = new BT_ACTION_SEND_TROOPS("SendTroopsAction", pSendTroopsCondition);
 
-    BT_DECO_CONDITION* pAttackCondition = new BT_DECO_CONDITION("AttackCondition", pMTRootSelector, &attackTroopsCondition);
+    BT_DECO_CONDITION* pAttackCondition = new BT_DECO_CONDITION("AttackCondition", pAttackSelector, &attackTroopsCondition);
     BT_ACTION_ATTACK_TROOPS* pAttackAction = new BT_ACTION_ATTACK_TROOPS("AttackAction", pAttackCondition);
 
     //Send idle workers to work

@@ -311,7 +311,7 @@ void Tools::UpdateDataValues(Data* pData) {
 
         if (unit->getType() == BWAPI::UnitTypes::Enum::Protoss_Zealot) 
         {
-            if (unit->getDistance(pData->rallyPosition) < 100)
+            if (unit->getDistance(pData->rallyPosition) < 500)
 			{
 				armyAtRally.insert(unit);
             }
@@ -322,7 +322,7 @@ void Tools::UpdateDataValues(Data* pData) {
 
         if (unit->getType() == BWAPI::UnitTypes::Enum::Protoss_Dragoon)
         {
-            if (unit->getDistance(pData->rallyPosition) < 100)
+            if (unit->getDistance(pData->rallyPosition) < 500)
 			{
 				armyAtRally.insert(unit);
             }
@@ -332,6 +332,17 @@ void Tools::UpdateDataValues(Data* pData) {
 
         }
 
+    }
+    // this value must be MORE than the value defined in CONDITIONS_BCK sendTroopsCondition function
+    if (armyAtBase.size() > 6) {
+        // if we have enough units at base, send them to the rally point
+        pData->sendingToRally = false;
+	}
+
+    // same argument here
+    if (armyAtRally.size() > 6) {
+		// if we have enough units at rally point, send them to the enemy
+        pData->attacking = false;
     }
 
     pData->currProbes = probes;
