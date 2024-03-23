@@ -22,6 +22,19 @@ BWAPI::Unit Tools::GetClosestUnitTo(BWAPI::Unit unit, const BWAPI::Unitset& unit
     return GetClosestUnitTo(unit->getPosition(), units);
 }
 
+bool Tools::IsUnitInUnitset(BWAPI::Unit unit, const BWAPI::Unitset& units)
+{
+    for (auto& u : units)
+    {
+        if (u->getID() == unit->getID())
+        {
+			return true;
+		}
+	}
+
+	return false;
+}
+
 int Tools::CountUnitsOfType(BWAPI::UnitType type, const BWAPI::Unitset& units)
 {
     int sum = 0;
@@ -309,6 +322,9 @@ void Tools::UpdateDataValues(Data* pData) {
             gates++;
         }
 
+       if (!Tools::IsUnitInUnitset(unit, pData->armyAttacking))
+       { 
+
         if (unit->getType() == BWAPI::UnitTypes::Enum::Protoss_Zealot) 
         {
             if (unit->getDistance(pData->rallyPosition) < 500)
@@ -332,6 +348,7 @@ void Tools::UpdateDataValues(Data* pData) {
 
         }
 
+       }
     }
     // this value must be MORE than the value defined in CONDITIONS_BCK sendTroopsCondition function
     if (armyAtBase.size() > 6) {

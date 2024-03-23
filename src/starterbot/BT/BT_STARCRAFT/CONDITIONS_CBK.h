@@ -22,5 +22,4 @@ bool pylonUnderBuild(void* data);
 
 bool sendTroopsCondition(void* data);
 bool attackTroopsCondition(void* data);
-
-bool initialAttackCondition(void* data);
+bool attackingBehaviourCondition(void* data);

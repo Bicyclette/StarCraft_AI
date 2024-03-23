@@ -36,6 +36,9 @@ StarterBot::StarterBot()
     BT_DECO_CONDITION* pAttackCondition = new BT_DECO_CONDITION("AttackCondition", pAttackSelector, &attackTroopsCondition);
     BT_ACTION_ATTACK_TROOPS* pAttackAction = new BT_ACTION_ATTACK_TROOPS("AttackAction", pAttackCondition);
 
+    BT_DECO_CONDITION* pAttackingBehaviourCondition = new BT_DECO_CONDITION("AttackingBehaviourCondition", pAttackSelector, &attackingBehaviourCondition);
+    BT_ACTION_ATTACKING_BEHAVIOUR* pAttackingBehaviourAction = new BT_ACTION_ATTACKING_BEHAVIOUR("AttackingBehaviourAction", pAttackingBehaviourCondition);
+
     //Send idle workers to work
     BT_ACTION_SEND_IDLE_WORKER_TO_MINERALS* pSendWorkerToMinerals = new BT_ACTION_SEND_IDLE_WORKER_TO_MINERALS("SendWorkerToMinerals", pMTRootSelector);
     BT_DECO_CONDITION* pSendWorkersToGasCondition = new BT_DECO_CONDITION("SendWorkersToGasCondition", pMTRootSelector, &sendWorkersToGasCondition);

@@ -164,22 +164,26 @@ bool attackTroopsCondition(void* data) {
 
 }
 
-bool initialAttackCondition(void* data) {
-
+bool attackingBehaviourCondition(void* data) {
 	Data* pData = static_cast<Data*>(data);
 
-	const BWAPI::Unitset& myUnits = BWAPI::Broodwar->self()->getUnits();
+	Tools::UpdateDataValues(pData);
 
-	int totalAttackUnits = 0;
-	const std::list<BWAPI::UnitType> attackUnits = { BWAPI::UnitTypes::Enum::Protoss_Zealot, BWAPI::UnitTypes::Enum::Protoss_Dragoon };
+	BWAPI::Unitset realArmy = BWAPI::Unitset();
 
-	for (auto& unit : myUnits)
+	for (auto& unit : pData->armyAttacking)
 	{
-		if (unit->isCompleted() && std::find(attackUnits.begin(), attackUnits.end(), unit->getType()) != attackUnits.end())
+		if (unit->exists())
 		{
-			totalAttackUnits++;
+			realArmy.insert(unit);
 		}
 	}
 
-	return totalAttackUnits>10;
+	pData->armyAttacking = realArmy;
+	bool canDo = realArmy.size() > 0;
+
+	// rush B
+	bool wantToDo = true;
+
+	return canDo && wantToDo;
 }
