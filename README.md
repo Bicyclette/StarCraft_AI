@@ -91,7 +91,7 @@ ResearchDecoratorSingularity --> ResearchActionSingularity{{Research Singularity
 MainSelector --> BuildOrderSelector(Follow Build Order State Diagram)
 
 
-MainSelector --> AttackSelector(Attack)
+MainSelector --> AttackSelector(Explore)
 
 AttackSelector --> AttackDecoratorVoidBase{Void Enemy Base}
 AttackDecoratorVoidBase --> AttackSeq(Attack Sequencer)
@@ -100,7 +100,7 @@ SightDecorator --> AttackNewTarget{{Set New Target}}
 
 AttackSeq --> RandomExploration{{Random Exploration}}
 
-AttackSelector --> AttackDecoratorRadius{Unit in Radius}
+AttackSelector --> AttackDecoratorRadius{Unit in Enemy Base}
 AttackDecoratorRadius --> VisitDecorator{{Visited Enemy Base}}
 
 ```
@@ -109,7 +109,6 @@ AttackDecoratorRadius --> VisitDecorator{{Visited Enemy Base}}
 
 At the scale of a group of offensive units, here is a diagram of the different states it can be in:
 ![FSM Group](/FSM_gp.png "FSM unit group")
-
 
 
 #### Build Order State Diagram
