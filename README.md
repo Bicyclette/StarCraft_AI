@@ -99,7 +99,8 @@ In the diagram below, every build is conditioned by the availability of enough r
 
 It is not, properly speaking, a FSM since some of the states are being active at the same time, for example building probes is active
 continuously, while building some of the other units or buildings when a condition is met. In fact, it is too complex to describe the whole
-system with mutually exclusive states, because different levels of unit management are done at the same time for efficiency.
+system with mutually exclusive states, because different levels of unit management are done at the same time for efficiency. However,
+if necessary, a FSM could be used to describe the state of a given unit rather than the whole macro-system. 
 
 ### Debugging features
 
