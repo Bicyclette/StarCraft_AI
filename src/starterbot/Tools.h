@@ -19,6 +19,7 @@ namespace Tools
 
     void DrawUnitBoundingBoxes();
     void DrawUnitCommands();
+    void DrawArmyAttentionRadius(BWAPI::Unitset, int radius);
 
     void SmartRightClick(BWAPI::Unit unit, BWAPI::Unit target);
 

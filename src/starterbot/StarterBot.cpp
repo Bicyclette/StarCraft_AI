@@ -159,6 +159,12 @@ void StarterBot::drawDebugInformation()
     BWAPI::Broodwar->drawTextScreen(BWAPI::Position(10, 10), "Hello, World!\n");
     Tools::DrawUnitCommands();
     Tools::DrawUnitBoundingBoxes();
+
+    // Debug the positions of our units
+    BWAPI::Broodwar->drawCircleMap(pData->basePosition, 500, BWAPI::Colors::Green);
+    BWAPI::Broodwar->drawCircleMap(pData->rallyPosition, 500, BWAPI::Colors::Purple);
+    Tools::DrawArmyAttentionRadius(pData->armyAttacking, 500);
+
 }
 
 // Called whenever the game ends and tells you if you won or not

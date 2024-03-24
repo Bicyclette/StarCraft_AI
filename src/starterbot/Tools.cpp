@@ -153,6 +153,23 @@ void Tools::DrawUnitBoundingBoxes()
     }
 }
 
+void Tools::DrawArmyAttentionRadius(BWAPI::Unitset army, int radius)
+{
+    // compute the average position of the army
+    BWAPI::Position center(0, 0);
+
+    // do not draw anything on empty army
+    if (army.empty()) { return; }
+    for (auto& unit : army)
+    {
+		center += unit->getPosition();
+	}
+    center /= army.size();
+
+	// draw the circle
+	BWAPI::Broodwar->drawCircleMap(center, radius, BWAPI::Colors::Red);
+}
+
 void Tools::SmartRightClick(BWAPI::Unit unit, BWAPI::Unit target)
 {
     // if there's no valid unit, ignore the command
@@ -324,7 +341,8 @@ void Tools::UpdateDataValues(Data* pData) {
 
        if (!Tools::IsUnitInUnitset(unit, pData->armyAttacking))
        { 
-
+        
+        // This should be reformed to use the Tools functions instead
         if (unit->getType() == BWAPI::UnitTypes::Enum::Protoss_Zealot) 
         {
             if (unit->getDistance(pData->rallyPosition) < 500)
