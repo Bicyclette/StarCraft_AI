@@ -92,7 +92,10 @@ MainSelector --> BuildOrderSelector(Follow Build Order State Diagram)
 
 The role of the State Diagram is to add some abstraction to the code to help us modify and follow a build order strategy for the early game. 
 
-Here we want to keep producing as many pylons as possible to have a bigger army and many Gates as long as our economy allows us to do so while keeping a track of the state of the game and our progression (to help us not to create too many buildings at once whithout any army). The Build order has been experimented on and should be keep as it is now as it's an optimized version for our strategy.
+Here we want to keep producing as many pylons as possible to have a bigger army and many Gates as long as our economy allows us to do so while keeping a track of the state of the game and our progression (to help us not to create too many buildings at once whithout any army).
+The Build order has been experimented on and should be keep as it is now as it's an optimized version for our strategy.
+
+![Build Order State Diagram](/BO_state_dg.png "Build Order State Diagram")
 
 ### Debugging features
 
