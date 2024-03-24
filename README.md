@@ -21,17 +21,23 @@ In parallel, a behavior tree can describe the management of units and resources.
 creating units, depending on the other statistics, like number of units or resource. (see below for details : Data Structures)\
 
 For the battling strategy, we chose our bot to be rather offensive. When a certain number of units is reached, they are sent to look
-for the enemy and start engaging into a battle. If they all die, another batch waits at a rally point, before being sent again.\
+for the enemy and start engaging into a battle. A rally point is set between the base and the enemy's base, to have an intermediary 
+point in order to stay reactive to the enemy. During this offensive phase, a radius is set, in which the enemy's strength is evaluated.
+If this figure is superior to the total strength of the attacking group, the group goes back to the rally point and waits for units to join
+until the strength reaches a superior value, before engaging into the battle again.\
 Depending on the race of the enemy, the way of dealing with their units will be different.
 Typically, a Zerg enemy is known to be handled more easily when gated, therefore in this case, the bot should build a bottleneck at
 the entrance of the base with buildings.
+
+When the enemy's base is destructed, units have a random behavior to look for other places on the map where the enemy could be found.
 
 ### Units and Technology Branch
 
 Following the specific build order, the exploration of the technology branch is constrained to stay efficient.
 The developed technology is the vital buildings (Pylons and Assimilators), and, on the other hand, basic buildings to produce battling units.
 In depth, the exploration does not go deeper than Cybernetic Cores.\
-In the implemented strategy, the main units are Probes for mining and construction, and Dragoons for efficient offensive power. 
+In the implemented strategy, the main units are Probes for mining and construction, Dragoons for efficient offensive power, and Zealots
+built with the excess of minerals.
 
 
 ### Data Structures
@@ -84,7 +90,27 @@ ResearchDecoratorSingularity --> ResearchActionSingularity{{Research Singularity
 
 MainSelector --> BuildOrderSelector(Follow Build Order State Diagram)
 
+
+MainSelector --> AttackSelector(Attack)
+
+AttackSelector --> AttackDecoratorVoidBase(Void Enemy Base)
+AttackDecoratorVoidBase --> AttackSeq(Attack Sequencer)
+AttackSeq --> SightDecorator{See Enemy Building}
+SightDecorator --> AttackNewTarget{{Set New Target}}
+
+AttackSeq --> RandomExploration{{Random Exploration}}
+
+AttackSelector --> AttackDecoratorRadius(Unit in Radius)
+AttackDecoratorRadius --> {{Visited Enemy Base}}
+
 ```
+
+#### FSM for a group of units
+
+At the scale of a group of offensive units, here is a diagram of the different states it can be in:
+![FSM Group](/FSM_gp.png "FSM unit group")
+
+
 
 #### Build Order State Diagram
 
@@ -94,13 +120,14 @@ Here we want to keep producing as many pylons as possible to have a bigger army 
 The Build order has been experimented on and should be keep as it is now as it's an optimized version for our strategy.
 
 In the diagram below, every build is conditioned by the availability of enough resources.
+Abusively, in the diagram, BO stands for *build order step*, that is gradually incremented during the game.
 
 ![Build Order State Diagram](/BO_state_dg.png "Build Order State Diagram")
 
 It is not, properly speaking, a FSM since some of the states are being active at the same time, for example building probes is active
 continuously, while building some of the other units or buildings when a condition is met. In fact, it is too complex to describe the whole
 system with mutually exclusive states, because different levels of unit management are done at the same time for efficiency. However,
-if necessary, a FSM could be used to describe the state of a given unit rather than the whole macro-system. 
+if necessary, a FSM could be used to describe the state of a given unit rather than the whole macro-system.
 
 ### Debugging features
 
