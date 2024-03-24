@@ -20,9 +20,6 @@ StarterBot::StarterBot()
     //Following line left as an example on how to use waitForCondition
     //pData->waitForConditionList.push_back(WaitForCondition(&mineralsHigherThan100, [](void* pData) {std::cout << "Minerals above 100";}));
 
-    //Define build order
-    setupBaseBuildOrder(pData);
-    setUpOneBaseAllIn(pData);
 
     //Construction of Macro Tree
     pMacroTree = new BT_DECORATOR("EntryPoint", nullptr);
@@ -109,6 +106,17 @@ void StarterBot::onStart()
         pData->basePosition = BWAPI::Position(startLocations[1]);
     }
 
+    if (pData->basePosition.y == 224) {
+        pData->spawnOnTop = true;
+    }
+    else {
+        pData->spawnOnTop = false;
+    }
+
+    //Define build order
+    setupBaseBuildOrder(pData);
+    setUpOneBaseAllIn(pData);
+
     pData->rallyPosition = (pData->basePosition + pData->enemyPosition * 3) / 4;
 }
 
@@ -121,6 +129,7 @@ void StarterBot::onFrame()
     // Update pData 
     Tools::UpdateDataValues(pData);
     Tools::UpdateBuildingStatus(pData);
+    Tools::setGateRally(pData);
 
     //pData->show_info();
 

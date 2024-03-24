@@ -19,6 +19,8 @@ public:
 	int wantedWorkersTotal = 30;
 	int wantedProbesOnGas = 0;
 
+	bool spawnOnTop;
+
 	// Army Units
 
 	int currZealots;
@@ -31,7 +33,7 @@ public:
 	BWAPI::Unitset armyAttacking = BWAPI::Unitset();
 
 	int armyAttentionRadius = 500;
-	int armyAtBaseRadius = 600;
+	int armyAtBaseRadius = 950;
 	int armyAtRallyRadius = 400;
 
 	bool defendingBase = true;
@@ -62,6 +64,18 @@ public:
 	BWAPI::Position rallyPosition;
 
 	std::list<WaitForCondition> waitForConditionList;
+
+	static const int prepositionnedBuildingMaxAmount = 10;
+
+	static BWAPI::TilePosition pylonPosList[prepositionnedBuildingMaxAmount];
+	static int pylonPosStep;
+	static BWAPI::TilePosition gatePosList[prepositionnedBuildingMaxAmount];
+	static int gatePosStep;
+	static BWAPI::TilePosition cyberPosList [prepositionnedBuildingMaxAmount];
+	static int cyberPosStep;
+
+	BWAPI::Position rallyAtBase;
+
 
 	void show_info();
 };

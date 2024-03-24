@@ -25,7 +25,7 @@ BT_NODE::State BT_ACTION_BO::ProgressBO(void* data)
 
     if (type)
     {
-        const bool startedBuilding = Tools::MyBuildBuilding(type);
+        const bool startedBuilding = Tools::MyBuildBuilding(type, pData);
 
         if (startedBuilding)
         {

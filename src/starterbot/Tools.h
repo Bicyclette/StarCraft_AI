@@ -15,7 +15,7 @@ namespace Tools
     BWAPI::Unit GetDepot();
 
     bool BuildBuilding(BWAPI::UnitType type);
-    bool MyBuildBuilding(BWAPI::UnitType type);
+    bool MyBuildBuilding(BWAPI::UnitType type, Data* pData);
 
     void DrawUnitBoundingBoxes();
     void DrawUnitCommands();
@@ -36,6 +36,7 @@ namespace Tools
     bool BuildingExistsOrOrderToBuildGiven(BWAPI::UnitType type);
 
     void SendProbesToGas(int amount);
+    void setGateRally(Data* pData);
 
 
     void sendUnitsTo(BWAPI::Position target);

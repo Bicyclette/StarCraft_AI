@@ -9,8 +9,33 @@ void setupBaseBuildOrder(Data* pData) {
 }
 
 void setUpOneBaseAllIn(Data* pData) {
+    if (pData->spawnOnTop) {
+        pData->pylonPosList[0] = BWAPI::TilePosition(45, 8);
+        pData->gatePosList[0] = BWAPI::TilePosition(48, 10);
+        pData->cyberPosList[0] = BWAPI::TilePosition(49, 7);
+        pData->rallyAtBase = BWAPI::Position(BWAPI::TilePosition(47, 8));
+    }
+    else {
+        pData->pylonPosList[0] = BWAPI::TilePosition(49, 116);
+        pData->gatePosList[0] = BWAPI::TilePosition(45, 115);
+        pData->cyberPosList[0] = BWAPI::TilePosition(46, 119);
+        pData->rallyAtBase = BWAPI::Position(BWAPI::TilePosition(50, 118));
+    }
+
+
     pData->buildOrder[0] = std::make_pair(8, NULL);
-    pData->buildOrderExtension[0] = [](Data* pData) {std::cout << "BO-0\n";pData->buildProbes = false;};
+    pData->buildOrderExtension[0] = [](Data* pData)
+        {
+            std::cout << "BO-0\n";
+            pData->buildProbes = false;
+
+            for (auto& unit : BWAPI::Broodwar->self()->getUnits()) {
+                if (unit->getType() == BWAPI::UnitTypes::Enum::Protoss_Probe && !unit->isGatheringGas() && unit->isCompleted()) {
+                    unit->move(BWAPI::Position(pData->pylonPosList[0]));
+                    break;
+                }
+            }
+        };
 
     pData->buildOrder[1] = std::make_pair(8, BWAPI::UnitTypes::Enum::Protoss_Pylon);
     pData->buildOrderExtension[1] = [](Data* pData) 
