@@ -93,6 +93,16 @@ MainSelector --> BuildOrderSelector(Follow Build Order State Diagram)
 
 MainSelector --> AttackSelector(Attack)
 
+AttackSelector --> AttackDecoratorVoidBase(Void Enemy Base)
+AttackDecoratorVoidBase --> AttackSeq(Attack Sequencer)
+AttackSeq --> SightDecorator{See Enemy Building}
+SightDecorator --> AttackNewTarget{{Set New Target}}
+
+AttackSeq --> RandomExploration{{Random Exploration}}
+
+AttackSelector --> AttackDecoratorRadius(Unit in Radius)
+AttackDecoratorRadius --> VisitDecorator{{Visited Enemy Base}}
+
 ```
 
 #### FSM for a group of units
