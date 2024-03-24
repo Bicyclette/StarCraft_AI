@@ -35,9 +35,11 @@ public:
 	int armyAttentionRadius = 500;
 	int armyAtBaseRadius = 950;
 	int armyAtRallyRadius = 400;
+	int enemyBaseRadius = 200;
 
 	bool defendingBase = true;
 	bool attacking = false;
+	bool hasBeenInEmenyBase = false;
 
 	double enemyPower = 0;
 

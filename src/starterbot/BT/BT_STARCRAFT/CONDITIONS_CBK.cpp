@@ -151,7 +151,7 @@ bool attackTroopsCondition(void* data) {
 			}
 			// unit has been produced at base but is not yet at the rally
 			else {
-				unit->move(pData->rallyPosition);
+				unit->attack(pData->rallyPosition);
 			}
 		}
 		pData->armyAtRally.clear();
@@ -215,4 +215,63 @@ bool attackingBehaviourCondition(void* data) {
 	const bool wantToDo = true;
 
 	return canDo && wantToDo;
+}
+
+bool unitInEnemyBaseCondition(void* data) {
+	Data* pData = static_cast<Data*>(data);
+
+	Tools::UpdateDataValues(pData);
+
+	if (pData->hasBeenInEmenyBase) {
+		return false;
+	}
+
+	for (auto& unit : BWAPI::Broodwar->self()->getUnits())
+	{
+		if (unit->getDistance(pData->enemyPosition)<50)
+		{
+			pData->hasBeenInEmenyBase = true;
+			return true;
+		}
+	}
+
+	return false;
+}
+
+bool enemyBaseEmptyCondition(void* data) {
+	Data* pData = static_cast<Data*>(data);
+
+	Tools::UpdateDataValues(pData);
+
+	if (!pData->hasBeenInEmenyBase) {
+		return false;
+	}
+
+
+	for (auto& unit : BWAPI::Broodwar->enemy()->getUnits())
+	{
+		if (unit->getDistance(pData->enemyPosition) < pData->enemyBaseRadius)
+		{
+			return false;
+		}
+	}
+
+	return true;
+}
+
+bool seeEnemyCondition(void* data) {
+	Data* pData = static_cast<Data*>(data);
+
+	Tools::UpdateDataValues(pData);
+
+	for (auto& unit : BWAPI::Broodwar->enemy()->getUnits())
+	{
+		pData->enemyPosition = unit->getPosition();
+		for (BWAPI::Unit unit : pData->armyAttacking) {
+			unit->attack(pData->enemyPosition);
+		}
+		return true;
+	}
+
+	return false;
 }
