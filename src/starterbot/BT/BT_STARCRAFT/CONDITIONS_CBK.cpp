@@ -128,16 +128,9 @@ bool sendTroopsCondition(void* data) {
 	Tools::UpdateDataValues(pData);
 
 	const int totalAttackUnitsAtBase = pData->armyAtBase.size();
-	//int totalAttackUnitsAtRally = pData->armyAtRally.size();
+	// keep at least 4 units at base at all time
 	const bool wantToDo = totalAttackUnitsAtBase > 4;
-	const bool canDo = !pData->sendingToRally;
-
-	// The multiple time behaviour is handled in the update function for data
-	// it resets the "sendingToRally" bool to false when enough units (more than the current
-	// value defined in this function) are at the base
-	// This is done to avoid sending the order to base units to go to rally
-	// at every frame when the condition is met
-
+	const bool canDo = !pData->defendingBase;
 
 	return canDo && wantToDo;
 }
@@ -146,17 +139,52 @@ bool attackTroopsCondition(void* data) {
 	Data* pData = static_cast<Data*>(data);
 
 	Tools::UpdateDataValues(pData);
-	const int totalAttackUnitsAtRally = pData->armyAtRally.size();
-	const bool wantToDo = totalAttackUnitsAtRally > 4;
+	
+	// if we are currently attacking we directly assign rallyPoints at rally point troops to the attacking troops
+	if (pData->attacking)
+	{
+		for (auto& unit : pData->armyAtRally)
+		{
+			if (unit->getDistance(pData->rallyPosition) < pData->armyAtRallyRadius)
+			{
+				pData->armyAttacking.insert(unit);
+			}
+			// unit has been produced at base but is not yet at the rally
+			else {
+				unit->move(pData->rallyPosition);
+			}
+		}
+		pData->armyAtRally.clear();
+	}
 
-	const bool canDo = !pData->attacking;
+	// compute our current power
+	int totalAttackUnitsAtRally = 0;
+
+	double powerAtRally = 0;
+	for (auto& unit : pData->armyAtRally)
+	{
+		// take only the units CURRENTLY at the rally point
+		if (unit->getDistance(pData->rallyPosition) < pData->armyAtRallyRadius)
+		{
+			// Power = (HP + Shields) * Damage
+			totalAttackUnitsAtRally++;
+			powerAtRally += (unit->getHitPoints() + unit->getShields())*unit->getType().groundWeapon().damageAmount();
+		}
+	}
+	const bool wantToDo = powerAtRally > 1.2 * pData->enemyPower;
+	const bool canDo = totalAttackUnitsAtRally > 4;
 
 	// Create a squad of units that will attack the base
 	if (canDo && wantToDo) {
 		pData->attacking = true;
 		for (auto& unit : pData->armyAtRally)
 		{
-			pData->armyAttacking.insert(unit);
+			// only add units that are at the rally point
+			// to not mess up the center of the army
+			if (unit->getDistance(pData->rallyPosition) < pData->armyAtRallyRadius)
+			{
+				pData->armyAttacking.insert(unit);
+			}
 		}
 	}
 	
@@ -168,7 +196,8 @@ bool attackingBehaviourCondition(void* data) {
 	Data* pData = static_cast<Data*>(data);
 
 	Tools::UpdateDataValues(pData);
-
+	
+	// update the army to remove dead units
 	BWAPI::Unitset realArmy = BWAPI::Unitset();
 
 	for (auto& unit : pData->armyAttacking)
@@ -180,10 +209,10 @@ bool attackingBehaviourCondition(void* data) {
 	}
 
 	pData->armyAttacking = realArmy;
-	bool canDo = realArmy.size() > 0;
+	const bool canDo = realArmy.size() > 0;
 
 	// rush B
-	bool wantToDo = true;
+	const bool wantToDo = true;
 
 	return canDo && wantToDo;
 }

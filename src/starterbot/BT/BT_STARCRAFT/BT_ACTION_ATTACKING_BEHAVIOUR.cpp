@@ -27,17 +27,22 @@ BT_NODE::State BT_ACTION_ATTACKING_BEHAVIOUR::AttackTroops(void* data)
 	double enemyPower = 0;
 
 	BWAPI::Position centerArmy = BWAPI::Position(0, 0);
+	int nbDragoons = 0;
 
 	for (auto& unit : pData->armyAttacking)
 	{
 		// Power = (HP + Shields) * Damage
 		ourPower += (unit->getHitPoints() + unit->getShields())*unit->getType().groundWeapon().damageAmount();
-		centerArmy += unit->getPosition();
+		if (unit->getType() == BWAPI::UnitTypes::Protoss_Dragoon)
+		{
+			centerArmy += unit->getPosition();
+			nbDragoons++;
+		}
 	}
 
 	if (!pData->armyAttacking.empty())
 	{
-		centerArmy /= pData->armyAttacking.size();
+		centerArmy /= nbDragoons;
 	}
 
 	// get visible ennemy units in radius around army
@@ -61,6 +66,7 @@ BT_NODE::State BT_ACTION_ATTACKING_BEHAVIOUR::AttackTroops(void* data)
 		enemyPower += (unit->getHitPoints() + unit->getShields())*unit->getType().groundWeapon().damageAmount();
 	}
 
+	// FLEE
 	if (ourPower < enemyPower) {
 		// send the army back to the rallyPoint
 		for (auto& unit : pData->armyAttacking)
@@ -70,6 +76,9 @@ BT_NODE::State BT_ACTION_ATTACKING_BEHAVIOUR::AttackTroops(void* data)
 		}
 		// pop the armyAttacking UnitSet to the armyAtRally UnitSet
 		pData->armyAttacking.clear();
+		// store previous enemy power to decide when to attack again
+		pData->enemyPower = enemyPower;
+		pData->attacking = false;
 		return BT_NODE::SUCCESS;
 	}
 

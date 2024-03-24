@@ -31,11 +31,13 @@ public:
 	BWAPI::Unitset armyAttacking = BWAPI::Unitset();
 
 	int armyAttentionRadius = 500;
-	int armyAtBaseRadius = 500;
+	int armyAtBaseRadius = 600;
 	int armyAtRallyRadius = 400;
 
-	bool sendingToRally = false;
+	bool defendingBase = true;
 	bool attacking = false;
+
+	double enemyPower = 0;
 
 	// Build
 

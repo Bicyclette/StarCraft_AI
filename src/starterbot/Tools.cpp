@@ -321,7 +321,6 @@ void Tools::UpdateDataValues(Data* pData) {
     int gates = 0;
 
     BWAPI::Unitset armyAtBase = BWAPI::Unitset();
-    BWAPI::Unitset armyAtRally = BWAPI::Unitset();
 
     const BWAPI::Unitset& myUnits = BWAPI::Broodwar->self()->getUnits();
     for (auto& unit : myUnits)
@@ -339,53 +338,31 @@ void Tools::UpdateDataValues(Data* pData) {
             gates++;
         }
 
-       if (!Tools::IsUnitInUnitset(unit, pData->armyAttacking))
+       if (!Tools::IsUnitInUnitset(unit, pData->armyAttacking) && !Tools::IsUnitInUnitset(unit, pData->armyAtRally))
        { 
-        
-        // This should be reformed to use the Tools functions instead
-        if (unit->getType() == BWAPI::UnitTypes::Enum::Protoss_Zealot) 
-        {
-            if (unit->getDistance(pData->rallyPosition) < pData->armyAtRallyRadius)
+			if (unit->getType() == BWAPI::UnitTypes::Enum::Protoss_Zealot || unit->getType() == BWAPI::UnitTypes::Enum::Protoss_Dragoon) 
 			{
-				armyAtRally.insert(unit);
-            }
-            else if (unit->getDistance(pData->basePosition) < pData->armyAtBaseRadius) {
-				armyAtBase.insert(unit);
-            }
-		}
-
-        if (unit->getType() == BWAPI::UnitTypes::Enum::Protoss_Dragoon)
-        {
-            if (unit->getDistance(pData->rallyPosition) < pData->armyAtRallyRadius)
-			{
-				armyAtRally.insert(unit);
-            }
-            else if (unit->getDistance(pData->basePosition) < pData->armyAtBaseRadius) {
-                armyAtBase.insert(unit);
-            }
-
-        }
-
+				if (unit->getDistance(pData->basePosition) < pData->armyAtBaseRadius) {
+					armyAtBase.insert(unit);
+				}
+                // idle unit waiting at rally but not yet assign to the rally troop
+                if (unit->getDistance(pData->rallyPosition) < pData->armyAtRallyRadius) {
+					pData->armyAtRally.insert(unit);
+                }
+			}
        }
     }
-    // this value must be MORE than the value defined in CONDITIONS_BCK sendTroopsCondition function
-    if (armyAtBase.size() > 6) {
-        // if we have enough units at base, send them to the rally point
-        pData->sendingToRally = false;
-	}
 
-    // same argument here
-    if (armyAtRally.size() > 6) {
-		// if we have enough units at rally point, send them to the enemy
-        pData->attacking = false;
-    }
+    // Start by defending the base and when we have enough units, start sending to rallypoint
+    if (pData->defendingBase && armyAtBase.size() > 6) {
+		pData->defendingBase = false;
+	}
 
     pData->currProbes = probes;
     pData->currGates = gates;
     pData->thresholdSupply = 2 + gates * 6;
     pData->probesOnGas = probesOnGas;
     pData->armyAtBase = armyAtBase;
-    pData->armyAtRally = armyAtRally;
  }
 
 bool Tools::IsBuildingAvailable(BWAPI::UnitType type) {
