@@ -20,12 +20,11 @@ Once the determined build order is completed, the bot is set on 'automatic mode'
 In parallel, a behavior tree can describe the management of units and resources. When a condition is met, the bot starts building or
 creating units, depending on the other statistics, like number of units or resource. (see below for details : Data Structures)\
 
-*use of scout ?*
-
-For the battling strategy, we chose our bot to be rather offensive. Depending on the race of the enemy, the way of dealing with their units will
-be different.
-Typically, a Zerg enemy is known to be handled more easily when gated, therefore in this case, the bot should build a bottleneck at the entrance of 
-the base with buildings.
+For the battling strategy, we chose our bot to be rather offensive. When a certain number of units is reached, they are sent to look
+for the enemy and start engaging into a battle. If they all die, another batch waits at a rally point, before being sent again.\
+Depending on the race of the enemy, the way of dealing with their units will be different.
+Typically, a Zerg enemy is known to be handled more easily when gated, therefore in this case, the bot should build a bottleneck at
+the entrance of the base with buildings.
 
 ### Units and Technology Branch
 
@@ -34,11 +33,10 @@ The developed technology is the vital buildings (Pylons and Assimilators), and, 
 In depth, the exploration does not go deeper than Cybernetic Cores.\
 In the implemented strategy, the main units are Probes for mining and construction, and Dragoons for efficient offensive power. 
 
-*send scout ? (impending)*
 
 ### Data Structures
 
-The main bot is following a behaviour tree for most of his behaviour. We have developped in parallele other data structure such as Final State Machine (FSM) that are described later on with the Build-Order State Diagram.
+The main bot is following a behaviour tree for most of his behaviour. We have developped in parallel other data structure such as Final State Machine (FSM) that are described later on with the Build-Order State Diagram.
 
 #### Main Behaviour Tree
 
@@ -95,12 +93,19 @@ The role of the State Diagram is to add some abstraction to the code to help us 
 Here we want to keep producing as many pylons as possible to have a bigger army and many Gates as long as our economy allows us to do so while keeping a track of the state of the game and our progression (to help us not to create too many buildings at once whithout any army).
 The Build order has been experimented on and should be keep as it is now as it's an optimized version for our strategy.
 
+In the diagram below, every build is conditioned by the availability of enough resources.
+
 ![Build Order State Diagram](/BO_state_dg.png "Build Order State Diagram")
+
+It is not, properly speaking, a FSM since some of the states are being active at the same time, for example building probes is active
+continuously, while building some of the other units or buildings when a condition is met. In fact, it is too complex to describe the whole
+system with mutually exclusive states, because different levels of unit management are done at the same time for efficiency.
 
 ### Debugging features
 
-The other features are mainly for debugging and confort, which are the ones already present in the initial code :
-bounding boxes and health bars display.
+The debugging features are mainly for clarity and confort, and consist in the ones already present in the initial code,
+(bounding boxes and health bars display) plus a display of action radii, which are centered on the base, rally points, and
+attacking units. This last radius determines the distance within which an enemy should be in order to be targeted by an offensive unit.
 
 ### Distribution of tasks
 
