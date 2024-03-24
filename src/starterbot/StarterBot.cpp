@@ -129,21 +129,10 @@ void StarterBot::onFrame()
     // Update pData 
     Tools::UpdateDataValues(pData);
     Tools::UpdateBuildingStatus(pData);
+    Tools::setGateRally(pData);
 
     //pData->show_info();
 
-
-    for (auto& unit : BWAPI::Broodwar->self()->getUnits()) {
-        if (unit->getType() == BWAPI::UnitTypes::Enum::Protoss_Pylon) {
-            std::cout << "Pylon : " << unit->getTilePosition() << std::endl;
-        }
-        if (unit->getType() == BWAPI::UnitTypes::Enum::Protoss_Gateway) {
-            std::cout << "Gateway : " << unit->getTilePosition() << std::endl;
-        }
-        if (unit->getType() == BWAPI::UnitTypes::Enum::Protoss_Cybernetics_Core) {
-            std::cout << "Cyber : " << unit->getTilePosition() << std::endl;
-        }
-    }
 
     // Run MacroTree
     if (pMacroTree != nullptr && pMacroTree->Evaluate(pData) != BT_NODE::RUNNING)

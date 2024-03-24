@@ -36,6 +36,7 @@ namespace Tools
     bool BuildingExistsOrOrderToBuildGiven(BWAPI::UnitType type);
 
     void SendProbesToGas(int amount);
+    void setGateRally(Data* pData);
 
 
     void sendUnitsTo(BWAPI::Position target);

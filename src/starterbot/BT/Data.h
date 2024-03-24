@@ -33,7 +33,7 @@ public:
 	BWAPI::Unitset armyAttacking = BWAPI::Unitset();
 
 	int armyAttentionRadius = 500;
-	int armyAtBaseRadius = 600;
+	int armyAtBaseRadius = 950;
 	int armyAtRallyRadius = 400;
 
 	bool defendingBase = true;
@@ -73,6 +73,8 @@ public:
 	static int gatePosStep;
 	static BWAPI::TilePosition cyberPosList [prepositionnedBuildingMaxAmount];
 	static int cyberPosStep;
+
+	BWAPI::Position rallyAtBase;
 
 
 	void show_info();

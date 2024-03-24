@@ -92,7 +92,7 @@ bool Tools::BuildBuilding(BWAPI::UnitType type)
     return builder->build(type, buildPos);
 }
 
-bool Tools::MyBuildBuilding(BWAPI::UnitType type) {
+bool Tools::MyBuildBuilding(BWAPI::UnitType type, Data* pData) {
     // Find a worker that isn't on more important task
     BWAPI::Unit myWorker = NULL;
 
@@ -103,13 +103,31 @@ bool Tools::MyBuildBuilding(BWAPI::UnitType type) {
         }
     }
 
-    // Get a location that we want to build the building next to
-    BWAPI::TilePosition desiredPos = BWAPI::Broodwar->self()->getStartLocation();
+    BWAPI::TilePosition buildPos;
 
-    // Ask BWAPI for a building location near the desired position for the type
-    int maxBuildRange = 64;
 
-    BWAPI::TilePosition buildPos = BWAPI::Broodwar->getBuildLocation(type, desiredPos, maxBuildRange, false);
+    if (type == BWAPI::UnitTypes::Enum::Protoss_Pylon && pData->pylonPosList[pData->pylonPosStep] != BWAPI::TilePosition(0, 0)) {
+        buildPos = pData->pylonPosList[pData->pylonPosStep];
+        pData->pylonPosStep++;
+    }
+    else if (type == BWAPI::UnitTypes::Enum::Protoss_Gateway && pData->gatePosList[pData->gatePosStep] != BWAPI::TilePosition(0, 0)) {
+        buildPos = pData->gatePosList[pData->gatePosStep];
+        pData->gatePosStep++;
+    }
+    else if (type == BWAPI::UnitTypes::Enum::Protoss_Cybernetics_Core && pData->cyberPosList[pData->cyberPosStep] != BWAPI::TilePosition(0, 0)) {
+        buildPos = pData->cyberPosList[pData->cyberPosStep];
+        pData->cyberPosStep++;
+    }
+    
+    else {
+        BWAPI::TilePosition desiredPos = BWAPI::Broodwar->self()->getStartLocation();
+
+        // Ask BWAPI for a building location near the desired position for the type
+        int maxBuildRange = 64;
+
+        buildPos = BWAPI::Broodwar->getBuildLocation(type, desiredPos, maxBuildRange, false);
+    }
+    
     return myWorker->build(type, buildPos);
 
 }
@@ -421,6 +439,14 @@ void Tools::SendProbesToGas(int amount) {
     }
 
     std::cout << "Not enough probes were sent to gas";
+}
+
+void Tools::setGateRally(Data* pData) {
+    for (auto& unit : BWAPI::Broodwar->self()->getUnits()) {
+        if (unit->getType() == BWAPI::UnitTypes::Enum::Protoss_Gateway && unit->isCompleted()) {
+            unit->setRallyPoint(pData->rallyAtBase);
+        }
+   }
 }
 
 void Tools::sendUnitsTo(BWAPI::Position target) {

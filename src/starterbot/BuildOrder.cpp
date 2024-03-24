@@ -13,11 +13,13 @@ void setUpOneBaseAllIn(Data* pData) {
         pData->pylonPosList[0] = BWAPI::TilePosition(45, 8);
         pData->gatePosList[0] = BWAPI::TilePosition(48, 10);
         pData->cyberPosList[0] = BWAPI::TilePosition(49, 7);
+        pData->rallyAtBase = BWAPI::Position(BWAPI::TilePosition(47, 8));
     }
     else {
         pData->pylonPosList[0] = BWAPI::TilePosition(49, 116);
         pData->gatePosList[0] = BWAPI::TilePosition(45, 115);
         pData->cyberPosList[0] = BWAPI::TilePosition(46, 119);
+        pData->rallyAtBase = BWAPI::Position(BWAPI::TilePosition(50, 118));
     }
 
 
