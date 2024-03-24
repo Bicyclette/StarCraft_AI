@@ -20,9 +20,6 @@ StarterBot::StarterBot()
     //Following line left as an example on how to use waitForCondition
     //pData->waitForConditionList.push_back(WaitForCondition(&mineralsHigherThan100, [](void* pData) {std::cout << "Minerals above 100";}));
 
-    //Define build order
-    setupBaseBuildOrder(pData);
-    setUpOneBaseAllIn(pData);
 
     //Construction of Macro Tree
     pMacroTree = new BT_DECORATOR("EntryPoint", nullptr);
@@ -106,6 +103,17 @@ void StarterBot::onStart()
         pData->basePosition = BWAPI::Position(startLocations[1]);
     }
 
+    if (pData->basePosition.y == 224) {
+        pData->spawnOnTop = true;
+    }
+    else {
+        pData->spawnOnTop = false;
+    }
+
+    //Define build order
+    setupBaseBuildOrder(pData);
+    setUpOneBaseAllIn(pData);
+
     pData->rallyPosition = (pData->basePosition + pData->enemyPosition * 3) / 4;
 }
 
@@ -121,6 +129,18 @@ void StarterBot::onFrame()
 
     //pData->show_info();
 
+
+    for (auto& unit : BWAPI::Broodwar->self()->getUnits()) {
+        if (unit->getType() == BWAPI::UnitTypes::Enum::Protoss_Pylon) {
+            std::cout << "Pylon : " << unit->getTilePosition() << std::endl;
+        }
+        if (unit->getType() == BWAPI::UnitTypes::Enum::Protoss_Gateway) {
+            std::cout << "Gateway : " << unit->getTilePosition() << std::endl;
+        }
+        if (unit->getType() == BWAPI::UnitTypes::Enum::Protoss_Cybernetics_Core) {
+            std::cout << "Cyber : " << unit->getTilePosition() << std::endl;
+        }
+    }
 
     // Run MacroTree
     if (pMacroTree != nullptr && pMacroTree->Evaluate(pData) != BT_NODE::RUNNING)

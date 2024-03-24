@@ -3,6 +3,14 @@
 std::pair<int, BWAPI::UnitType> Data::buildOrder[Data::buildOrderMaxLength];
 std::function<void(Data*)> Data::buildOrderExtension[Data::buildOrderMaxLength];
 
+BWAPI::TilePosition Data::pylonPosList[Data::prepositionnedBuildingMaxAmount];
+BWAPI::TilePosition Data::gatePosList[Data::prepositionnedBuildingMaxAmount];
+BWAPI::TilePosition Data::cyberPosList[Data::prepositionnedBuildingMaxAmount];
+int Data::pylonPosStep = 0;
+int Data::gatePosStep = 0;
+int Data::cyberPosStep = 0;
+
+
 void Data::show_info() {
     std::cout << "pData info :" << std::endl;
     std::cout << "currMinerals: " << currMinerals << std::endl;

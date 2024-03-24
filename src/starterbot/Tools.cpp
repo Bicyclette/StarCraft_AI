@@ -79,7 +79,7 @@ bool Tools::BuildBuilding(BWAPI::UnitType type)
     return builder->build(type, buildPos);
 }
 
-bool Tools::MyBuildBuilding(BWAPI::UnitType type) {
+bool Tools::MyBuildBuilding(BWAPI::UnitType type, Data* pData) {
     // Find a worker that isn't on more important task
     BWAPI::Unit myWorker = NULL;
 
@@ -90,13 +90,33 @@ bool Tools::MyBuildBuilding(BWAPI::UnitType type) {
         }
     }
 
+    BWAPI::TilePosition buildPos;
+
     // Get a location that we want to build the building next to
-    BWAPI::TilePosition desiredPos = BWAPI::Broodwar->self()->getStartLocation();
 
-    // Ask BWAPI for a building location near the desired position for the type
-    int maxBuildRange = 64;
 
-    BWAPI::TilePosition buildPos = BWAPI::Broodwar->getBuildLocation(type, desiredPos, maxBuildRange, false);
+    if (type == BWAPI::UnitTypes::Enum::Protoss_Pylon && pData->pylonPosList[pData->pylonPosStep] != BWAPI::TilePosition(0, 0)) {
+        buildPos = pData->pylonPosList[pData->pylonPosStep];
+        pData->pylonPosStep++;
+        std::cout << "Pylon pos custom : " << buildPos;
+    }
+    else if (type == BWAPI::UnitTypes::Enum::Protoss_Gateway && pData->gatePosList[pData->gatePosStep] != BWAPI::TilePosition(0, 0)) {
+        buildPos = pData->gatePosList[pData->gatePosStep];
+        pData->gatePosStep++;
+        std::cout << "Gate pos custom : " << buildPos;
+    }
+    else if (type == BWAPI::UnitTypes::Enum::Protoss_Cybernetics_Core && pData->cyberPosList[pData->cyberPosStep] != BWAPI::TilePosition(0, 0)) {
+        buildPos = pData->cyberPosList[pData->cyberPosStep];
+        pData->cyberPosStep++;
+        std::cout << "Cyber pos custom : " << buildPos;
+    }
+    else {
+        BWAPI::TilePosition desiredPos = BWAPI::Broodwar->self()->getStartLocation();
+        int maxBuildRange = 64;
+        buildPos = BWAPI::Broodwar->getBuildLocation(type, desiredPos, maxBuildRange, false);
+    }
+
+    std::cout << "Pos result: " << buildPos;
     return myWorker->build(type, buildPos);
 
 }
@@ -315,7 +335,7 @@ void Tools::UpdateDataValues(Data* pData) {
 			{
 				armyAtRally.insert(unit);
             }
-            else if (unit->getDistance(pData->basePosition) < 500) {
+            else if (unit->getDistance(pData->basePosition) < 600) {
 				armyAtBase.insert(unit);
             }
 		}

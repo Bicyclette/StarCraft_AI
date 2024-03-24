@@ -19,6 +19,8 @@ public:
 	int wantedWorkersTotal = 30;
 	int wantedProbesOnGas = 0;
 
+	bool spawnOnTop;
+
 	// Army Units
 
 	int currZealots;
@@ -54,6 +56,16 @@ public:
 	BWAPI::Position rallyPosition;
 
 	std::list<WaitForCondition> waitForConditionList;
+
+	static const int prepositionnedBuildingMaxAmount = 10;
+
+	static BWAPI::TilePosition pylonPosList[prepositionnedBuildingMaxAmount];
+	static int pylonPosStep;
+	static BWAPI::TilePosition gatePosList[prepositionnedBuildingMaxAmount];
+	static int gatePosStep;
+	static BWAPI::TilePosition cyberPosList [prepositionnedBuildingMaxAmount];
+	static int cyberPosStep;
+
 
 	void show_info();
 };
