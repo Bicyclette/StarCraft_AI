@@ -15,7 +15,7 @@ The bot is developped on StarCraft : Brood War using the BWAPI library with the 
 ## Bot Strategy
 
 The overall strategy of the bot is to follow a certain build oder, i.e. deterministic actions during the game. This is gradually incremented during the 
-game to follow the said order, depending on what stage of the game is bot is actually in.\
+game to follow the said order, depending on what stage of the game the bot is actually in.\
 Once the determined build order is completed, the bot is set on 'automatic mode' to deal with these tasks more independently.\
 In parallel, a behavior tree can describe the management of units and resources. When a condition is met, the bot starts building or
 creating units, depending on the other statistics, like number of units or resource. (see below for details : Data Structures)\
@@ -135,6 +135,11 @@ The debugging features are mainly for clarity and confort, and consist in the on
 attacking units. This last radius determines the distance within which an enemy should be in order to be targeted by an offensive unit.
 
 ### Distribution of tasks
+
+- **Emeric Marguet** : Global management of project, Strategy Designer, Build Order Strategy, Creation and Implementation, Enemy final extermination
+- **Eyal Benaroche** : Attacking strategy, RallyPoint, Unit management, Escaping-Exploring-Attacking pattern
+- **Sakula Hys** : Build Order optimisation and refactoring, Units production, Global documentation proccess 
+- **Mathias Velo** : Base defense and positionning, anti-zerg rush strategy 
 
 ## Setup Instructions:
 
