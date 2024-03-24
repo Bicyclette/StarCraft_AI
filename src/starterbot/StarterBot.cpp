@@ -161,9 +161,9 @@ void StarterBot::drawDebugInformation()
     Tools::DrawUnitBoundingBoxes();
 
     // Debug the positions of our units
-    BWAPI::Broodwar->drawCircleMap(pData->basePosition, 500, BWAPI::Colors::Green);
-    BWAPI::Broodwar->drawCircleMap(pData->rallyPosition, 500, BWAPI::Colors::Purple);
-    Tools::DrawArmyAttentionRadius(pData->armyAttacking, 500);
+    BWAPI::Broodwar->drawCircleMap(pData->basePosition, pData->armyAtBaseRadius, BWAPI::Colors::Green);
+    BWAPI::Broodwar->drawCircleMap(pData->rallyPosition, pData->armyAtRallyRadius, BWAPI::Colors::Purple);
+    Tools::DrawArmyAttentionRadius(pData->armyAttacking, pData->armyAttentionRadius);
 
 }
 

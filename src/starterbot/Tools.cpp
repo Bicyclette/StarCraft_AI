@@ -345,22 +345,22 @@ void Tools::UpdateDataValues(Data* pData) {
         // This should be reformed to use the Tools functions instead
         if (unit->getType() == BWAPI::UnitTypes::Enum::Protoss_Zealot) 
         {
-            if (unit->getDistance(pData->rallyPosition) < 500)
+            if (unit->getDistance(pData->rallyPosition) < pData->armyAtRallyRadius)
 			{
 				armyAtRally.insert(unit);
             }
-            else if (unit->getDistance(pData->basePosition) < 500) {
+            else if (unit->getDistance(pData->basePosition) < pData->armyAtBaseRadius) {
 				armyAtBase.insert(unit);
             }
 		}
 
         if (unit->getType() == BWAPI::UnitTypes::Enum::Protoss_Dragoon)
         {
-            if (unit->getDistance(pData->rallyPosition) < 500)
+            if (unit->getDistance(pData->rallyPosition) < pData->armyAtRallyRadius)
 			{
 				armyAtRally.insert(unit);
             }
-            else if (unit->getDistance(pData->basePosition) < 500) {
+            else if (unit->getDistance(pData->basePosition) < pData->armyAtBaseRadius) {
                 armyAtBase.insert(unit);
             }
 

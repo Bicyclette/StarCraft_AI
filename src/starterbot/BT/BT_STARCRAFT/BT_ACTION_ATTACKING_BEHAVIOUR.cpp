@@ -19,9 +19,30 @@ BT_NODE::State BT_ACTION_ATTACKING_BEHAVIOUR::AttackTroops(void* data)
 {
 	Data* pData = (Data*)data;
 
-	// get visible ennemy units
 
-	const BWAPI::Unitset& enemyUnits = BWAPI::Broodwar->enemy()->getUnits();
+	// then compute the power of our army and the power of the enemy army
+	// and attack the enemy army if we are stronger
+	// if we are weaker, send the army back to the rallyPoint
+	double ourPower = 0;
+	double enemyPower = 0;
+
+	BWAPI::Position centerArmy = BWAPI::Position(0, 0);
+
+	for (auto& unit : pData->armyAttacking)
+	{
+		// Power = (HP + Shields) * Damage
+		ourPower += (unit->getHitPoints() + unit->getShields())*unit->getType().groundWeapon().damageAmount();
+		centerArmy += unit->getPosition();
+	}
+
+	if (!pData->armyAttacking.empty())
+	{
+		centerArmy /= pData->armyAttacking.size();
+	}
+
+	// get visible ennemy units in radius around army
+
+	const BWAPI::Unitset& enemyUnits = BWAPI::Broodwar->getUnitsInRadius(centerArmy, pData->armyAttentionRadius, BWAPI::Filter::IsEnemy);
 
 	// no enemy units, attack the enemy base
 
@@ -34,22 +55,10 @@ BT_NODE::State BT_ACTION_ATTACKING_BEHAVIOUR::AttackTroops(void* data)
 		return BT_NODE::SUCCESS;
 	}
 
-	// then compute the power of our army and the power of the enemy army
-	// and attack the enemy army if we are stronger
-	// if we are weaker, send the army back to the rallyPoint
-	double ourPower = 0;
-	double enemyPower = 0;
-
-	for (auto& unit : pData->armyAttacking)
-	{
-		ourPower += unit->getType().groundWeapon().damageAmount();
-		ourPower += unit->getHitPoints() + unit->getShields();
-	}
-
 	for (auto& unit : enemyUnits)
 	{
-		enemyPower += unit->getType().groundWeapon().damageAmount();
-		enemyPower += unit->getHitPoints() + unit->getShields();
+		// Power = (HP + Shields) * Damage
+		enemyPower += (unit->getHitPoints() + unit->getShields())*unit->getType().groundWeapon().damageAmount();
 	}
 
 	if (ourPower < enemyPower) {
