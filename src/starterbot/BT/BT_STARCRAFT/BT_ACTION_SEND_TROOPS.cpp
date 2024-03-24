@@ -19,15 +19,23 @@ BT_NODE::State BT_ACTION_SEND_TROOPS::SendTroops(void* data)
 {
 	Data* pData = (Data*)data;
 
-	std::cout<<"Army at base :"<<pData->armyAtBase.size()<<std::endl;
-
 	// if we have enough units at base, send them to the rally point
+	int totalAttackUnitsAtBase = pData->armyAtBase.size();
 	for (auto& unit : pData->armyAtBase)
 	{
 		unit->move(pData->rallyPosition);
-
+		pData->armyAtRally.insert(unit);
 	}
-	std::cout << "Sending troops to rally point"<< std::endl;
-	pData->sendingToRally = true;
+	pData->armyAtBase.clear();
+	// force units supposed to be in rally but no in the rally position to go to the rally
+	for (auto& unit : pData->armyAtRally)
+	{
+		if (unit->getDistance(pData->rallyPosition) > pData->armyAtRallyRadius)
+		{
+			unit->move(pData->rallyPosition);
+		}
+	}
+
+	std::cout << "Sending " << totalAttackUnitsAtBase <<" troops to rally point"<< std::endl;
 	return BT_NODE::SUCCESS;
 }

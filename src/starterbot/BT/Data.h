@@ -32,8 +32,16 @@ public:
 	BWAPI::Unitset armyAtRally = BWAPI::Unitset();
 	BWAPI::Unitset armyAttacking = BWAPI::Unitset();
 
-	bool sendingToRally = false;
+	int armyAttentionRadius = 500;
+	int armyAtBaseRadius = 600;
+	int armyAtRallyRadius = 400;
+
+	bool defendingBase = true;
 	bool attacking = false;
+
+	double enemyPower = 0;
+
+	// Build
 
 	bool buildProbes = true;
 	bool buildArmy = false;

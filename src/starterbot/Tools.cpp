@@ -22,6 +22,19 @@ BWAPI::Unit Tools::GetClosestUnitTo(BWAPI::Unit unit, const BWAPI::Unitset& unit
     return GetClosestUnitTo(unit->getPosition(), units);
 }
 
+bool Tools::IsUnitInUnitset(BWAPI::Unit unit, const BWAPI::Unitset& units)
+{
+    for (auto& u : units)
+    {
+        if (u->getID() == unit->getID())
+        {
+			return true;
+		}
+	}
+
+	return false;
+}
+
 int Tools::CountUnitsOfType(BWAPI::UnitType type, const BWAPI::Unitset& units)
 {
     int sum = 0;
@@ -79,7 +92,7 @@ bool Tools::BuildBuilding(BWAPI::UnitType type)
     return builder->build(type, buildPos);
 }
 
-bool Tools::MyBuildBuilding(BWAPI::UnitType type, Data* pData) {
+bool Tools::MyBuildBuilding(BWAPI::UnitType type) {
     // Find a worker that isn't on more important task
     BWAPI::Unit myWorker = NULL;
 
@@ -90,33 +103,13 @@ bool Tools::MyBuildBuilding(BWAPI::UnitType type, Data* pData) {
         }
     }
 
-    BWAPI::TilePosition buildPos;
-
     // Get a location that we want to build the building next to
+    BWAPI::TilePosition desiredPos = BWAPI::Broodwar->self()->getStartLocation();
 
+    // Ask BWAPI for a building location near the desired position for the type
+    int maxBuildRange = 64;
 
-    if (type == BWAPI::UnitTypes::Enum::Protoss_Pylon && pData->pylonPosList[pData->pylonPosStep] != BWAPI::TilePosition(0, 0)) {
-        buildPos = pData->pylonPosList[pData->pylonPosStep];
-        pData->pylonPosStep++;
-        std::cout << "Pylon pos custom : " << buildPos;
-    }
-    else if (type == BWAPI::UnitTypes::Enum::Protoss_Gateway && pData->gatePosList[pData->gatePosStep] != BWAPI::TilePosition(0, 0)) {
-        buildPos = pData->gatePosList[pData->gatePosStep];
-        pData->gatePosStep++;
-        std::cout << "Gate pos custom : " << buildPos;
-    }
-    else if (type == BWAPI::UnitTypes::Enum::Protoss_Cybernetics_Core && pData->cyberPosList[pData->cyberPosStep] != BWAPI::TilePosition(0, 0)) {
-        buildPos = pData->cyberPosList[pData->cyberPosStep];
-        pData->cyberPosStep++;
-        std::cout << "Cyber pos custom : " << buildPos;
-    }
-    else {
-        BWAPI::TilePosition desiredPos = BWAPI::Broodwar->self()->getStartLocation();
-        int maxBuildRange = 64;
-        buildPos = BWAPI::Broodwar->getBuildLocation(type, desiredPos, maxBuildRange, false);
-    }
-
-    std::cout << "Pos result: " << buildPos;
+    BWAPI::TilePosition buildPos = BWAPI::Broodwar->getBuildLocation(type, desiredPos, maxBuildRange, false);
     return myWorker->build(type, buildPos);
 
 }
@@ -158,6 +151,23 @@ void Tools::DrawUnitBoundingBoxes()
         BWAPI::Position bottomRight(unit->getRight(), unit->getBottom());
         BWAPI::Broodwar->drawBoxMap(topLeft, bottomRight, BWAPI::Colors::White);
     }
+}
+
+void Tools::DrawArmyAttentionRadius(BWAPI::Unitset army, int radius)
+{
+    // compute the average position of the army
+    BWAPI::Position center(0, 0);
+
+    // do not draw anything on empty army
+    if (army.empty()) { return; }
+    for (auto& unit : army)
+    {
+		center += unit->getPosition();
+	}
+    center /= army.size();
+
+	// draw the circle
+	BWAPI::Broodwar->drawCircleMap(center, radius, BWAPI::Colors::Red);
 }
 
 void Tools::SmartRightClick(BWAPI::Unit unit, BWAPI::Unit target)
@@ -311,7 +321,6 @@ void Tools::UpdateDataValues(Data* pData) {
     int gates = 0;
 
     BWAPI::Unitset armyAtBase = BWAPI::Unitset();
-    BWAPI::Unitset armyAtRally = BWAPI::Unitset();
 
     const BWAPI::Unitset& myUnits = BWAPI::Broodwar->self()->getUnits();
     for (auto& unit : myUnits)
@@ -329,48 +338,31 @@ void Tools::UpdateDataValues(Data* pData) {
             gates++;
         }
 
-        if (unit->getType() == BWAPI::UnitTypes::Enum::Protoss_Zealot) 
-        {
-            if (unit->getDistance(pData->rallyPosition) < 500)
+       if (!Tools::IsUnitInUnitset(unit, pData->armyAttacking) && !Tools::IsUnitInUnitset(unit, pData->armyAtRally))
+       { 
+			if (unit->getType() == BWAPI::UnitTypes::Enum::Protoss_Zealot || unit->getType() == BWAPI::UnitTypes::Enum::Protoss_Dragoon) 
 			{
-				armyAtRally.insert(unit);
-            }
-            else if (unit->getDistance(pData->basePosition) < 600) {
-				armyAtBase.insert(unit);
-            }
-		}
-
-        if (unit->getType() == BWAPI::UnitTypes::Enum::Protoss_Dragoon)
-        {
-            if (unit->getDistance(pData->rallyPosition) < 500)
-			{
-				armyAtRally.insert(unit);
-            }
-            else if (unit->getDistance(pData->basePosition) < 500) {
-                armyAtBase.insert(unit);
-            }
-
-        }
-
+				if (unit->getDistance(pData->basePosition) < pData->armyAtBaseRadius) {
+					armyAtBase.insert(unit);
+				}
+                // idle unit waiting at rally but not yet assign to the rally troop
+                if (unit->getDistance(pData->rallyPosition) < pData->armyAtRallyRadius) {
+					pData->armyAtRally.insert(unit);
+                }
+			}
+       }
     }
-    // this value must be MORE than the value defined in CONDITIONS_BCK sendTroopsCondition function
-    if (armyAtBase.size() > 6) {
-        // if we have enough units at base, send them to the rally point
-        pData->sendingToRally = false;
+
+    // Start by defending the base and when we have enough units, start sending to rallypoint
+    if (pData->defendingBase && armyAtBase.size() > 6) {
+		pData->defendingBase = false;
 	}
-
-    // same argument here
-    if (armyAtRally.size() > 6) {
-		// if we have enough units at rally point, send them to the enemy
-        pData->attacking = false;
-    }
 
     pData->currProbes = probes;
     pData->currGates = gates;
     pData->thresholdSupply = 2 + gates * 6;
     pData->probesOnGas = probesOnGas;
     pData->armyAtBase = armyAtBase;
-    pData->armyAtRally = armyAtRally;
  }
 
 bool Tools::IsBuildingAvailable(BWAPI::UnitType type) {

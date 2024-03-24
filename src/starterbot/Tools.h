@@ -7,6 +7,7 @@ namespace Tools
 {
     BWAPI::Unit GetClosestUnitTo(BWAPI::Position p, const BWAPI::Unitset& units);
     BWAPI::Unit GetClosestUnitTo(BWAPI::Unit unit, const BWAPI::Unitset& units);
+    bool IsUnitInUnitset(BWAPI::Unit unit, const BWAPI::Unitset& units);
 
     int CountUnitsOfType(BWAPI::UnitType type, const BWAPI::Unitset& units);
 
@@ -18,6 +19,7 @@ namespace Tools
 
     void DrawUnitBoundingBoxes();
     void DrawUnitCommands();
+    void DrawArmyAttentionRadius(BWAPI::Unitset, int radius);
 
     void SmartRightClick(BWAPI::Unit unit, BWAPI::Unit target);
 

@@ -33,6 +33,9 @@ StarterBot::StarterBot()
     BT_DECO_CONDITION* pAttackCondition = new BT_DECO_CONDITION("AttackCondition", pAttackSelector, &attackTroopsCondition);
     BT_ACTION_ATTACK_TROOPS* pAttackAction = new BT_ACTION_ATTACK_TROOPS("AttackAction", pAttackCondition);
 
+    BT_DECO_CONDITION* pAttackingBehaviourCondition = new BT_DECO_CONDITION("AttackingBehaviourCondition", pAttackSelector, &attackingBehaviourCondition);
+    BT_ACTION_ATTACKING_BEHAVIOUR* pAttackingBehaviourAction = new BT_ACTION_ATTACKING_BEHAVIOUR("AttackingBehaviourAction", pAttackingBehaviourCondition);
+
     //Send idle workers to work
     BT_ACTION_SEND_IDLE_WORKER_TO_MINERALS* pSendWorkerToMinerals = new BT_ACTION_SEND_IDLE_WORKER_TO_MINERALS("SendWorkerToMinerals", pMTRootSelector);
     BT_DECO_CONDITION* pSendWorkersToGasCondition = new BT_DECO_CONDITION("SendWorkersToGasCondition", pMTRootSelector, &sendWorkersToGasCondition);
@@ -176,6 +179,12 @@ void StarterBot::drawDebugInformation()
     BWAPI::Broodwar->drawTextScreen(BWAPI::Position(10, 10), "Hello, World!\n");
     Tools::DrawUnitCommands();
     Tools::DrawUnitBoundingBoxes();
+
+    // Debug the positions of our units
+    BWAPI::Broodwar->drawCircleMap(pData->basePosition, pData->armyAtBaseRadius, BWAPI::Colors::Green);
+    BWAPI::Broodwar->drawCircleMap(pData->rallyPosition, pData->armyAtRallyRadius, BWAPI::Colors::Purple);
+    Tools::DrawArmyAttentionRadius(pData->armyAttacking, pData->armyAttentionRadius);
+
 }
 
 // Called whenever the game ends and tells you if you won or not
