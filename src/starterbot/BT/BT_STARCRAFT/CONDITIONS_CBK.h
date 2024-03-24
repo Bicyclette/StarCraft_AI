@@ -23,3 +23,7 @@ bool pylonUnderBuild(void* data);
 bool sendTroopsCondition(void* data);
 bool attackTroopsCondition(void* data);
 bool attackingBehaviourCondition(void* data);
+
+bool unitInEnemyBaseCondition(void* data);
+bool enemyBaseEmptyCondition(void* data);
+bool seeEnemyCondition(void* data);

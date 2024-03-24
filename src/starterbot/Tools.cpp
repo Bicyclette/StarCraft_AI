@@ -123,7 +123,7 @@ bool Tools::MyBuildBuilding(BWAPI::UnitType type, Data* pData) {
         BWAPI::TilePosition desiredPos = BWAPI::Broodwar->self()->getStartLocation();
 
         // Ask BWAPI for a building location near the desired position for the type
-        int maxBuildRange = 64;
+        int maxBuildRange = 150;
 
         buildPos = BWAPI::Broodwar->getBuildLocation(type, desiredPos, maxBuildRange, false);
     }

@@ -23,7 +23,7 @@ BT_NODE::State BT_ACTION_SEND_TROOPS::SendTroops(void* data)
 	int totalAttackUnitsAtBase = pData->armyAtBase.size();
 	for (auto& unit : pData->armyAtBase)
 	{
-		unit->move(pData->rallyPosition);
+		unit->attack(pData->rallyPosition);
 		pData->armyAtRally.insert(unit);
 	}
 	pData->armyAtBase.clear();
@@ -32,7 +32,7 @@ BT_NODE::State BT_ACTION_SEND_TROOPS::SendTroops(void* data)
 	{
 		if (unit->getDistance(pData->rallyPosition) > pData->armyAtRallyRadius)
 		{
-			unit->move(pData->rallyPosition);
+			unit->attack(pData->rallyPosition);
 		}
 	}
 

@@ -26,15 +26,6 @@ StarterBot::StarterBot()
     BT_DECO_REPEATER* pMTForeverRepeater = new BT_DECO_REPEATER("MTRepeatForever", pMacroTree, 0, true, false, true);
     BT_SELECTOR* pMTRootSelector = new BT_SELECTOR("MTRootSelector", pMTForeverRepeater, 15);
 
-    BT_SELECTOR* pAttackSelector = new BT_SELECTOR("AttackSelector", pMTRootSelector, 10);
-    BT_DECO_CONDITION* pSendTroopsCondition = new BT_DECO_CONDITION("SendTroopsCondition", pAttackSelector, &sendTroopsCondition);
-    BT_ACTION_SEND_TROOPS* pSendTroopsAction = new BT_ACTION_SEND_TROOPS("SendTroopsAction", pSendTroopsCondition);
-
-    BT_DECO_CONDITION* pAttackCondition = new BT_DECO_CONDITION("AttackCondition", pAttackSelector, &attackTroopsCondition);
-    BT_ACTION_ATTACK_TROOPS* pAttackAction = new BT_ACTION_ATTACK_TROOPS("AttackAction", pAttackCondition);
-
-    BT_DECO_CONDITION* pAttackingBehaviourCondition = new BT_DECO_CONDITION("AttackingBehaviourCondition", pAttackSelector, &attackingBehaviourCondition);
-    BT_ACTION_ATTACKING_BEHAVIOUR* pAttackingBehaviourAction = new BT_ACTION_ATTACKING_BEHAVIOUR("AttackingBehaviourAction", pAttackingBehaviourCondition);
 
     //Send idle workers to work
     BT_ACTION_SEND_IDLE_WORKER_TO_MINERALS* pSendWorkerToMinerals = new BT_ACTION_SEND_IDLE_WORKER_TO_MINERALS("SendWorkerToMinerals", pMTRootSelector);
@@ -75,7 +66,33 @@ StarterBot::StarterBot()
     BT_DECO_CONDITION* pResearchSingularityChargeCondition = new BT_DECO_CONDITION("ResearchSingularityChargeCondition", pResearchSelector, upgradeSingularityChargeCondition);
     BT_ACTION_UPGRADE* pResearchSingularityChargeAction = new BT_ACTION_UPGRADE("ResearchSingularityChargeAction",
         pResearchSingularityChargeCondition, BWAPI::UpgradeTypes::Enum::Singularity_Charge);
+
+    //Handle exploration after ennemy main base is down
+    BT_SELECTOR* pExplorationSelector = new BT_SELECTOR("ExplorationSelector", pMTRootSelector, 10);
+
+    BT_DECO_CONDITION* pUnitInEnemyBaseCondition = new BT_DECO_CONDITION("UnitInEnemyBaseCondition", pExplorationSelector, &unitInEnemyBaseCondition);  //This condition does its own action
+    BT_ACTION_IDLE* pUnitEnemyBaseConditionIdle = new BT_ACTION_IDLE("UnitEnemyBaseConditionIdle", pUnitInEnemyBaseCondition);
+
+    BT_DECO_CONDITION* pEnemyBaseEmptyCondition = new BT_DECO_CONDITION("EnemyBaseEmptyCondition", pExplorationSelector, &enemyBaseEmptyCondition);
+
+    BT_SEQUENCER* pEnemyBaseEmptySequencer = new BT_SEQUENCER("EnemyBaseEmptySequencer", pEnemyBaseEmptyCondition, 10);
+
+    BT_DECO_CONDITION* pSeeEnemyCondition = new BT_DECO_CONDITION("SeeEnemyCondition", pEnemyBaseEmptySequencer, &seeEnemyCondition);                   //This condition does its own action
+    BT_ACTION_IDLE* pSeeEnemyIdle = new BT_ACTION_IDLE("SeeEnemyIdle", pSeeEnemyCondition);
+
+    BT_ACTION_EXPLORE* pExploreAction = new BT_ACTION_EXPLORE("ExploreAction", pEnemyBaseEmptySequencer);
     
+
+    //Handle attacks
+    BT_SELECTOR* pAttackSelector = new BT_SELECTOR("AttackSelector", pMTRootSelector, 10);
+    BT_DECO_CONDITION* pSendTroopsCondition = new BT_DECO_CONDITION("SendTroopsCondition", pAttackSelector, &sendTroopsCondition);
+    BT_ACTION_SEND_TROOPS* pSendTroopsAction = new BT_ACTION_SEND_TROOPS("SendTroopsAction", pSendTroopsCondition);
+
+    BT_DECO_CONDITION* pAttackCondition = new BT_DECO_CONDITION("AttackCondition", pAttackSelector, &attackTroopsCondition);
+    BT_ACTION_ATTACK_TROOPS* pAttackAction = new BT_ACTION_ATTACK_TROOPS("AttackAction", pAttackCondition);
+
+    BT_DECO_CONDITION* pAttackingBehaviourCondition = new BT_DECO_CONDITION("AttackingBehaviourCondition", pAttackSelector, &attackingBehaviourCondition);
+    BT_ACTION_ATTACKING_BEHAVIOUR* pAttackingBehaviourAction = new BT_ACTION_ATTACKING_BEHAVIOUR("AttackingBehaviourAction", pAttackingBehaviourCondition);
 }
 
 
@@ -172,6 +189,7 @@ void StarterBot::drawDebugInformation()
     // Debug the positions of our units
     BWAPI::Broodwar->drawCircleMap(pData->basePosition, pData->armyAtBaseRadius, BWAPI::Colors::Green);
     BWAPI::Broodwar->drawCircleMap(pData->rallyPosition, pData->armyAtRallyRadius, BWAPI::Colors::Purple);
+    BWAPI::Broodwar->drawCircleMap(pData->enemyPosition, pData->enemyBaseRadius, BWAPI::Colors::Red);
     Tools::DrawArmyAttentionRadius(pData->armyAttacking, pData->armyAttentionRadius);
 
 }
